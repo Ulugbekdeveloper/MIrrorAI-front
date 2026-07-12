@@ -3,7 +3,7 @@ import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 
 import { colors, radius, spacing, typography } from '@/theme';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
+type Variant = 'cta' | 'primary' | 'secondary' | 'ghost' | 'danger';
 type Size = 'md' | 'lg';
 
 type Props = Omit<PressableProps, 'style' | 'children'> & {
@@ -73,6 +73,16 @@ const sizeStyles = {
 } as const;
 
 const variantStyles = {
+  // The primary auth CTA — white pill with dark text.
+  cta: {
+    container: {
+      backgroundColor: '#FFFFFF',
+      borderRadius: radius.pill,
+      paddingVertical: 18,
+    },
+    pressed: { backgroundColor: '#E5E5E7' },
+    label: { color: '#0A0A0F', fontWeight: '700' as const, fontSize: 17 },
+  },
   primary: {
     container: { backgroundColor: colors.primary },
     pressed: { backgroundColor: colors.primaryPressed },

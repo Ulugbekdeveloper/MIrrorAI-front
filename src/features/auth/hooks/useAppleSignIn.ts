@@ -1,13 +1,16 @@
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Crypto from 'expo-crypto';
 import { useCallback, useEffect, useState } from 'react';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 
 import { logger } from '@/lib/logger';
 import { useAuthStore } from '@/stores/authStore';
 
 type Return = {
+  /** Always true — button renders on every platform. Use `supported` to gate the actual flow. */
   available: boolean;
+  /** Whether the current device can actually complete the Apple flow. */
+  supported: boolean;
   busy: boolean;
   error: string | null;
   signIn: () => Promise<void>;
@@ -24,7 +27,7 @@ async function makeNonce(): Promise<{ rawNonce: string; hashedNonce: string }> {
 
 export function useAppleSignIn(): Return {
   const signInWithApple = useAuthStore((s) => s.signInWithApple);
-  const [available, setAvailable] = useState(false);
+  const [supported, setSupported] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,14 +35,22 @@ export function useAppleSignIn(): Return {
     if (Platform.OS !== 'ios') return;
     let mounted = true;
     AppleAuthentication.isAvailableAsync()
-      .then((ok) => mounted && setAvailable(ok))
-      .catch(() => mounted && setAvailable(false));
+      .then((ok) => mounted && setSupported(ok))
+      .catch(() => mounted && setSupported(false));
     return () => {
       mounted = false;
     };
   }, []);
 
   const signIn = useCallback(async () => {
+    if (!supported) {
+      Alert.alert(
+        'Sign in with Apple',
+        'Apple Sign In only works on iPhone or iPad. Use Google or your email to continue on this device.',
+      );
+      return;
+    }
+
     setError(null);
     setBusy(true);
     try {
@@ -76,9 +87,9 @@ export function useAppleSignIn(): Return {
     } finally {
       setBusy(false);
     }
-  }, [signInWithApple]);
+  }, [signInWithApple, supported]);
 
-  return { available, busy, error, signIn };
+  return { available: true, supported, busy, error, signIn };
 }
 
 function isCancelledError(err: unknown): boolean {

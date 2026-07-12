@@ -1,9 +1,9 @@
-import * as AppleAuthentication from 'expo-apple-authentication';
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, spacing } from '@/theme';
-import { Button } from '@/ui';
+import AppleIcon from '@assets/icons/apple.svg';
+import GoogleIcon from '@assets/icons/google.svg';
+import { colors, radius, spacing, typography } from '@/theme';
 
 import { useAppleSignIn } from '../hooks/useAppleSignIn';
 import { useGoogleSignIn } from '../hooks/useGoogleSignIn';
@@ -24,60 +24,65 @@ export function SocialAuthButtons({ onError }: Props) {
   if (!apple.available && !google.available) return null;
 
   return (
-    <View style={styles.wrapper}>
-      {apple.available ? (
-        <AppleAuthentication.AppleAuthenticationButton
-          buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
-          buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
-          cornerRadius={radius.md}
-          style={styles.appleButton}
-          onPress={apple.signIn}
-        />
-      ) : null}
-
+    <View style={styles.row}>
       {google.available ? (
-        <Button
-          label="Continue with Google"
-          variant="secondary"
+        <SocialPill
+          label="Google"
           onPress={google.signIn}
           loading={google.busy}
-          disabled={!google.available}
-          leadingIcon={<GoogleGlyph />}
+          icon={<GoogleIcon width={22} height={22} />}
+        />
+      ) : null}
+      {apple.available ? (
+        <SocialPill
+          label="Apple"
+          onPress={apple.signIn}
+          loading={apple.busy}
+          icon={<AppleIcon width={22} height={22} />}
         />
       ) : null}
     </View>
   );
 }
 
-/**
- * Placeholder mark — swap for the official Google G SVG when you add
- * react-native-svg. Kept text-only to avoid an extra dependency here.
- */
-function GoogleGlyph() {
+type SocialPillProps = {
+  label: string;
+  onPress: () => void;
+  loading?: boolean;
+  icon: React.ReactNode;
+};
+
+function SocialPill({ label, onPress, loading, icon }: SocialPillProps) {
   return (
-    <View style={styles.glyph}>
-      <View style={styles.glyphInner} />
-    </View>
+    <Pressable
+      onPress={onPress}
+      disabled={loading}
+      style={({ pressed }) => [styles.pill, pressed && styles.pillPressed]}
+    >
+      {loading ? (
+        <ActivityIndicator color={colors.text} />
+      ) : (
+        <>
+          {icon}
+          <Text style={styles.label}>{label}</Text>
+        </>
+      )}
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: { gap: spacing.sm },
-  appleButton: { height: 52 },
-  glyph: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 2,
-    borderColor: colors.text,
+  row: { flexDirection: 'row', gap: spacing.sm },
+  pill: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: spacing.sm,
+    height: 56,
+    borderRadius: radius.pill,
+    backgroundColor: '#17181C',
   },
-  glyphInner: {
-    width: 8,
-    height: 2,
-    backgroundColor: colors.text,
-    position: 'absolute',
-    right: 0,
-  },
+  pillPressed: { backgroundColor: '#101115' },
+  label: { ...typography.bodyStrong, color: colors.text },
 });
