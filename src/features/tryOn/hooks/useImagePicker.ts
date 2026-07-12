@@ -19,7 +19,7 @@ export function useImagePicker() {
   const pickFromLibrary = useCallback(async (): Promise<LocalImage | null> => {
     if (!(await permissions.ensureLibrary())) return null;
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: false,
       quality: 0.9,
       exif: false,
@@ -31,7 +31,7 @@ export function useImagePicker() {
   const captureFromCamera = useCallback(async (): Promise<LocalImage | null> => {
     if (!(await permissions.ensureCamera())) return null;
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       quality: 0.9,
       exif: false,
     });
