@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "Mirror AI",
+    "slug": "mirror-ai",
+    "scheme": "mirrorai",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ai.mirror.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Mirror AI uses the camera so you can capture a photo to try clothes on.",
+        "NSPhotoLibraryUsageDescription": "Mirror AI needs access to your photos so you can pick an image to try clothes on.",
+        "NSPhotoLibraryAddUsageDescription": "Mirror AI saves your try-on results to your photo library."
+      }
+    },
+    "android": {
+      "package": "ai.mirror.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0B0B0F"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Mirror AI to use your camera to take a try-on photo."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Mirror AI to access your photos to pick a try-on image."
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      }
+    }
+  }
+}
