@@ -53,13 +53,36 @@ npm run ios               # or: npm run android
 
 The app codes against this contract — mirror it on the NestJS side:
 
-| Method | Path                | Body                             | Returns                              |
-|--------|---------------------|----------------------------------|--------------------------------------|
-| POST   | /auth/register      | `{ email, password }`            | `{ user, accessToken, refreshToken }`|
-| POST   | /auth/login         | `{ email, password }`            | `{ user, accessToken, refreshToken }`|
-| POST   | /auth/refresh       | `{ refreshToken }`               | `{ accessToken, refreshToken }`      |
-| GET    | /auth/me            | —                                | `{ user }`                           |
-| POST   | /uploads/presign    | `{ fileName, contentType }`      | `{ uploadUrl, fileKey }`             |
-| POST   | /try-on             | `{ personKey, garmentKey }`      | `{ jobId, status }`                  |
-| GET    | /try-on/:jobId      | —                                | `{ jobId, status, resultUrl?, error?}`|
-| GET    | /try-on             | —                                | `{ items: TryOnJob[] }`              |
+| Method | Path                | Body                                                        | Returns                               |
+|--------|---------------------|-------------------------------------------------------------|---------------------------------------|
+| POST   | /auth/register      | `{ email, password, displayName? }`                         | `{ user, accessToken, refreshToken }` |
+| POST   | /auth/login         | `{ email, password }`                                       | `{ user, accessToken, refreshToken }` |
+| POST   | /auth/refresh       | `{ refreshToken }`                                          | `{ accessToken, refreshToken }`       |
+| POST   | /auth/google        | `{ idToken }`                                               | `{ user, accessToken, refreshToken }` |
+| POST   | /auth/apple         | `{ identityToken, rawNonce, fullName? }`                    | `{ user, accessToken, refreshToken }` |
+| GET    | /auth/me            | —                                                           | `{ user }`                            |
+| POST   | /uploads/presign    | `{ fileName, contentType }`                                 | `{ uploadUrl, fileKey }`              |
+| POST   | /try-on             | `{ personKey, garmentKey }`                                 | `{ jobId, status }`                   |
+| GET    | /try-on/:jobId      | —                                                           | `{ jobId, status, resultUrl?, error?}`|
+| GET    | /try-on             | —                                                           | `{ items: TryOnJob[] }`               |
+
+### Verifying social sign-in server-side
+
+**Google** — the mobile app sends the `id_token` it received from Google.
+Verify it against Google's JWKS (`https://www.googleapis.com/oauth2/v3/certs`)
+with `audience` set to your **Web** OAuth client ID. Then upsert the user
+by `sub` (Google user id) and email, and return your own JWTs.
+
+**Apple** — the mobile app sends the `identityToken` from
+`expo-apple-authentication` plus the unhashed `rawNonce`. Verify the JWT
+against Apple's JWKS (`https://appleid.apple.com/auth/keys`) with
+`audience = "ai.mirror.app"` (your bundle identifier), and confirm that
+`sha256(rawNonce) === identityToken.nonce`. `fullName` is only supplied
+on first sign-in — persist it then, because Apple never sends it again.
+
+## Environment
+
+The `EXPO_PUBLIC_*` vars in `.env` are inlined into the JS bundle. Only
+put public identifiers there — never secrets. Google OAuth *client IDs*
+are safe (they identify your app, not authenticate it); Google/Apple
+client *secrets* and the Replicate API token belong on the NestJS side.

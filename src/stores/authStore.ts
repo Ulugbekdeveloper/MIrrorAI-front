@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { authApi, configureAuthBridge } from '@/api';
+import type { AppleFullName } from '@/api/auth.api';
 import type { AuthResponse, AuthTokens, User } from '@/api';
 import { secureStorage } from '@/lib/storage';
 
@@ -15,6 +16,12 @@ type AuthState = {
   hydrate: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, displayName?: string) => Promise<void>;
+  signInWithGoogle: (idToken: string) => Promise<void>;
+  signInWithApple: (input: {
+    identityToken: string;
+    rawNonce: string;
+    fullName?: AppleFullName;
+  }) => Promise<void>;
   logout: () => Promise<void>;
 
   /** Internal — used by the http client via the auth bridge. */
@@ -27,6 +34,23 @@ async function persistTokens(tokens: AuthTokens) {
     secureStorage.set('refreshToken', tokens.refreshToken),
   ]);
 }
+
+// ─── DEV BYPASS ───────────────────────────────────────────────────────
+// Skips the backend so the UI can be exercised without NestJS running.
+// Only active in __DEV__. Delete this block when the backend is wired up.
+const DEV_BYPASS_EMAIL = 'john@gmail.com';
+const DEV_BYPASS_PASSWORD = '12345';
+
+function devBypassUser(): User {
+  return {
+    id: 'dev-user',
+    email: DEV_BYPASS_EMAIL,
+    displayName: 'John',
+    provider: 'email',
+    createdAt: new Date().toISOString(),
+  };
+}
+// ──────────────────────────────────────────────────────────────────────
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   status: 'unknown',
@@ -59,6 +83,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   login: async (email, password) => {
+    // Dev bypass — no persistence, so restarting the app returns to login.
+    if (__DEV__ && email === DEV_BYPASS_EMAIL && password === DEV_BYPASS_PASSWORD) {
+      set({
+        status: 'authenticated',
+        user: devBypassUser(),
+        accessToken: 'dev-token',
+        refreshToken: 'dev-token',
+      });
+      return;
+    }
+
     const res = await authApi.login({ email, password });
     await persistTokens(res);
     set({
@@ -71,6 +106,28 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   register: async (email, password, displayName) => {
     const res: AuthResponse = await authApi.register({ email, password, displayName });
+    await persistTokens(res);
+    set({
+      status: 'authenticated',
+      user: res.user,
+      accessToken: res.accessToken,
+      refreshToken: res.refreshToken,
+    });
+  },
+
+  signInWithGoogle: async (idToken) => {
+    const res = await authApi.google({ idToken });
+    await persistTokens(res);
+    set({
+      status: 'authenticated',
+      user: res.user,
+      accessToken: res.accessToken,
+      refreshToken: res.refreshToken,
+    });
+  },
+
+  signInWithApple: async ({ identityToken, rawNonce, fullName }) => {
+    const res = await authApi.apple({ identityToken, rawNonce, fullName });
     await persistTokens(res);
     set({
       status: 'authenticated',

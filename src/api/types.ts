@@ -1,7 +1,11 @@
+export type AuthProvider = 'email' | 'google' | 'apple';
+
 export type User = {
   id: string;
   email: string;
   displayName?: string;
+  avatarUrl?: string;
+  provider: AuthProvider;
   createdAt: string;
 };
 
