@@ -10,7 +10,11 @@ config.transformer = {
 
 config.resolver = {
   ...config.resolver,
-  assetExts: config.resolver.assetExts.filter((ext) => ext !== 'svg'),
+  assetExts: [
+    ...config.resolver.assetExts.filter((ext) => ext !== 'svg'),
+    // Not in Metro's default asset list — needed for the onboarding images.
+    'avif',
+  ],
   sourceExts: [...config.resolver.sourceExts, 'svg'],
 };
 

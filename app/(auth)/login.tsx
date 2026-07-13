@@ -16,6 +16,7 @@ import {
 import { ApiError } from '@/api';
 import { SocialAuthButtons } from '@/features/auth/components/SocialAuthButtons';
 import { loginSchema, type LoginInput } from '@/features/auth/schemas';
+import { secureStorage } from '@/lib/storage';
 import { useAuthStore } from '@/stores/authStore';
 import { colors, spacing, typography } from '@/theme';
 import { Button, ScreenContainer, TextField } from '@/ui';
@@ -61,7 +62,7 @@ export default function LoginScreen() {
                 Welcome back<Text style={styles.wave}>👋</Text>
               </Text>
               <Text style={styles.subtitle}>
-                Log in to see what&apos;s happening near you
+                 See yourself in any outfit before buying.
               </Text>
             </View>
 
@@ -151,6 +152,20 @@ export default function LoginScreen() {
               Sign up
             </Link>
           </View>
+
+          {/* DEV ONLY — replay onboarding without reinstalling the app.
+              Delete this block once onboarding is finalized. */}
+          {__DEV__ ? (
+            <Pressable
+              style={styles.devReplay}
+              onPress={async () => {
+                await secureStorage.remove('onboardingSeen');
+                router.replace('/onboarding');
+              }}
+            >
+              <Text style={styles.devReplayText}>[dev] Replay onboarding</Text>
+            </Pressable>
+          ) : null}
         </ScrollView>
       </KeyboardAvoidingView>
     </ScreenContainer>
@@ -196,4 +211,6 @@ const styles = StyleSheet.create({
   },
   footerText: { ...typography.body, color: colors.textMuted },
   link: { ...typography.bodyStrong, color: colors.text },
+  devReplay: { alignItems: 'center', paddingTop: spacing.md },
+  devReplayText: { ...typography.caption, color: colors.textDim },
 });

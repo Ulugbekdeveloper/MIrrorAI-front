@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
+import * as SystemUI from 'expo-system-ui';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
@@ -8,6 +9,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useAuthStore } from '@/stores/authStore';
 import { colors } from '@/theme';
+
+// Sets the native window/root-view background (Android especially) so
+// screen transitions never flash the platform default white — react-
+// native-screens reveals this background for a frame or two mid-slide,
+// underneath whatever the JS `contentStyle` paints.
+void SystemUI.setBackgroundColorAsync(colors.bg);
 
 export default function RootLayout() {
   const queryClient = useMemo(
@@ -43,7 +50,11 @@ export default function RootLayout() {
               screenOptions={{
                 headerShown: false,
                 contentStyle: { backgroundColor: colors.bg },
-                animation: 'fade',
+                // Matches the (auth) group's transition so onboarding →
+                // login feels the same as login ↔ register.
+                animation: 'slide_from_right',
+                animationDuration: 220,
+                gestureEnabled: true,
               }}
             />
           )}

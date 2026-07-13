@@ -25,11 +25,10 @@ export default function RegisterScreen() {
   const register = useAuthStore((s) => s.register);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const { control, handleSubmit, formState } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { displayName: '', email: '', password: '', confirmPassword: '' },
+    defaultValues: { displayName: '', email: '', password: '' },
   });
 
   const onSubmit = handleSubmit(async (values) => {
@@ -62,9 +61,9 @@ export default function RegisterScreen() {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.title}>Create your account</Text>
+              <Text style={styles.title}>Try on clothes with AI.</Text>
               <Text style={styles.subtitle}>
-                Join thousands discovering the best spots near you
+                 Discover your perfect style with AI.
               </Text>
             </View>
 
@@ -139,42 +138,6 @@ export default function RegisterScreen() {
                       >
                         <Ionicons
                           name={passwordVisible ? 'eye-outline' : 'eye-off-outline'}
-                          size={20}
-                          color={colors.textMuted}
-                        />
-                      </Pressable>
-                    }
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="confirmPassword"
-                render={({ field, fieldState }) => (
-                  <TextField
-                    placeholder="Confirm password"
-                    secureTextEntry={!confirmVisible}
-                    autoComplete="password-new"
-                    textContentType="newPassword"
-                    value={field.value}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    error={fieldState.error?.message}
-                    leftIcon={
-                      <Ionicons
-                        name="lock-closed-outline"
-                        size={20}
-                        color={colors.textMuted}
-                      />
-                    }
-                    rightAdornment={
-                      <Pressable
-                        onPress={() => setConfirmVisible((v) => !v)}
-                        hitSlop={12}
-                      >
-                        <Ionicons
-                          name={confirmVisible ? 'eye-outline' : 'eye-off-outline'}
                           size={20}
                           color={colors.textMuted}
                         />
