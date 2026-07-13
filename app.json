@@ -19,6 +19,7 @@
     },
     "android": {
       "package": "ai.mirror.app",
+      "softwareKeyboardLayoutMode": "pan",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_MEDIA_IMAGES",
