@@ -21,7 +21,11 @@ export function SocialAuthButtons({ onError }: Props) {
     if (err && onError) onError(err);
   }, [apple.error, google.error, onError]);
 
-  if (!apple.available && !google.available) return null;
+  // `apple.available` is always true (the hook shows an alert on
+  // unsupported devices instead of hiding) — but here we want the button
+  // gone entirely on Android, so gate on `supported` instead. Since each
+  // pill is `flex: 1`, Google alone naturally expands to fill the row.
+  if (!apple.supported && !google.available) return null;
 
   return (
     <View style={styles.row}>
@@ -33,7 +37,7 @@ export function SocialAuthButtons({ onError }: Props) {
           icon={<GoogleIcon width={22} height={22} />}
         />
       ) : null}
-      {apple.available ? (
+      {apple.supported ? (
         <SocialPill
           label="Apple"
           onPress={apple.signIn}
