@@ -1,17 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ActivityIndicator, Share, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Share, StyleSheet, Text, View } from 'react-native';
 
 import { tryOnApi } from '@/api';
+import { ResultDetailModal } from '@/features/tryOn/components/ResultDetailModal';
+import { useSaveToLibrary } from '@/features/tryOn/hooks/useSaveToLibrary';
 import { useTryOnDraftStore } from '@/features/tryOn/state';
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, spacing, typography } from '@/theme';
 import { Button, ScreenContainer } from '@/ui';
 
 export default function ResultScreen() {
   const router = useRouter();
   const { jobId } = useLocalSearchParams<{ jobId: string }>();
   const resetDraft = useTryOnDraftStore((s) => s.reset);
+  const { save, saving } = useSaveToLibrary();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['tryOn', jobId],
@@ -19,14 +21,30 @@ export default function ResultScreen() {
     enabled: !!jobId,
   });
 
-  const share = async () => {
+  const handleShare = async () => {
     if (!data?.resultUrl) return;
     await Share.share({ url: data.resultUrl, message: 'My try-on from Mirror AI' });
   };
 
-  const startAgain = () => {
+  const handleRestyle = () => {
     resetDraft();
-    router.replace('/(app)/try-on/pick-person');
+    router.replace('/(app)/try-on/studio');
+  };
+
+  const handleDownload = async () => {
+    if (!data?.resultUrl) return;
+    const ok = await save(data.resultUrl);
+    if (ok) Alert.alert('Saved', 'Added to your photo library.');
+  };
+
+  const handleBuyOriginal = () => {
+    // TODO(product): catalog items don't carry a real purchase link yet —
+    // wire this to the garment's actual product URL once that data exists.
+    Alert.alert('Coming soon', "Buying the original item isn't available yet.");
+  };
+
+  const handleClose = () => {
+    router.replace('/(app)/home');
   };
 
   if (isLoading) {
@@ -57,45 +75,23 @@ export default function ResultScreen() {
 
   return (
     <ScreenContainer>
-      <View style={styles.header}>
-        <Text style={styles.title}>Your try-on</Text>
-        <Text style={styles.body}>Looks good? Save it or try another garment.</Text>
-      </View>
-
-      <View style={styles.imageWrap}>
-        <Image
-          source={{ uri: data.resultUrl }}
-          style={styles.image}
-          contentFit="cover"
-          transition={200}
-        />
-      </View>
-
-      <View style={styles.actions}>
-        <Button label="Share" onPress={share} />
-        <Button label="Try another" variant="secondary" onPress={startAgain} />
-        <Button
-          label="Back to home"
-          variant="ghost"
-          onPress={() => router.replace('/(app)/home')}
-        />
-      </View>
+      <ResultDetailModal
+        visible
+        imageUri={data.resultUrl}
+        onClose={handleClose}
+        onShare={handleShare}
+        onRestyle={handleRestyle}
+        onDownload={handleDownload}
+        onBuyOriginal={handleBuyOriginal}
+        downloading={saving}
+      />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  header: { paddingTop: spacing.md, paddingBottom: spacing.md, gap: spacing.xxs },
   title: { ...typography.displaySm, color: colors.text },
   body: { ...typography.body, color: colors.textMuted },
-  imageWrap: {
-    flex: 1,
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-    backgroundColor: colors.surface,
-    marginBottom: spacing.md,
-  },
-  image: { width: '100%', height: '100%' },
   actions: { paddingVertical: spacing.md, gap: spacing.sm },
 });

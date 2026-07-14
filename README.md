@@ -60,6 +60,7 @@ The app codes against this contract — mirror it on the NestJS side:
 | POST   | /auth/refresh       | `{ refreshToken }`                                          | `{ accessToken, refreshToken }`       |
 | POST   | /auth/google        | `{ idToken }`                                               | `{ user, accessToken, refreshToken }` |
 | POST   | /auth/apple         | `{ identityToken, rawNonce, fullName? }`                    | `{ user, accessToken, refreshToken }` |
+| POST   | /auth/forgot-password | `{ email }`                                               | `{ message }`                         |
 | GET    | /auth/me            | —                                                           | `{ user }`                            |
 | POST   | /uploads/presign    | `{ fileName, contentType }`                                 | `{ uploadUrl, fileKey }`              |
 | POST   | /try-on             | `{ personKey, garmentKey }`                                 | `{ jobId, status }`                   |
@@ -79,6 +80,15 @@ against Apple's JWKS (`https://appleid.apple.com/auth/keys`) with
 `audience = "ai.mirror.app"` (your bundle identifier), and confirm that
 `sha256(rawNonce) === identityToken.nonce`. `fullName` is only supplied
 on first sign-in — persist it then, because Apple never sends it again.
+
+### Forgot password
+
+`POST /auth/forgot-password` should **always return success** (even for an
+email that isn't registered) and email a reset link/token if the account
+exists — never let this endpoint reveal whether an email is registered.
+The app doesn't yet implement the token-confirmation screen (the page the
+reset link opens); that's a separate deep-link route to add once the
+backend defines the token format.
 
 ## Environment
 

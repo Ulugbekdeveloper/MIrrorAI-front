@@ -72,7 +72,7 @@ export default function LoginScreen() {
                 name="email"
                 render={({ field, fieldState }) => (
                   <TextField
-                    placeholder="jarik@gmail.com"
+                    placeholder="Enter your email"
                     autoCapitalize="none"
                     autoComplete="email"
                     keyboardType="email-address"
@@ -93,7 +93,7 @@ export default function LoginScreen() {
                 name="password"
                 render={({ field, fieldState }) => (
                   <TextField
-                    placeholder="••••••••••"
+                    placeholder="Enter your password"
                     secureTextEntry={!passwordVisible}
                     autoComplete="password"
                     textContentType="password"
@@ -125,7 +125,12 @@ export default function LoginScreen() {
               />
 
               <View style={styles.forgotRow}>
-                <Text style={styles.forgot}>Forgot Password</Text>
+                <Text
+                  style={styles.forgot}
+                  onPress={() => router.push('/(auth)/forgot-password')}
+                >
+                  Forgot Password
+                </Text>
               </View>
 
               {submitError ? (

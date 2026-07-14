@@ -45,6 +45,14 @@
         {
           "photosPermission": "Allow Mirror AI to access your photos to pick a try-on image."
         }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow Mirror AI to access your photos.",
+          "savePhotosPermission": "Mirror AI saves your try-on results to your photo library.",
+          "isAccessMediaLocationEnabled": false
+        }
       ]
     ],
     "extra": {

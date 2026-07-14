@@ -14,7 +14,7 @@ export default function HomeScreen() {
 
   const startFlow = () => {
     resetDraft();
-    router.push('/(app)/try-on/pick-person');
+    router.push('/(app)/try-on/studio');
   };
 
   return (

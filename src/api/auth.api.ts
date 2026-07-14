@@ -22,6 +22,9 @@ export const authApi = {
 
   me: () => http.get<{ user: User }>('/auth/me'),
 
+  forgotPassword: (body: { email: string }) =>
+    http.post<{ message: string }>('/auth/forgot-password', body, { skipAuth: true }),
+
   google: (body: { idToken: string }) =>
     http.post<AuthResponse>('/auth/google', body, { skipAuth: true }),
 

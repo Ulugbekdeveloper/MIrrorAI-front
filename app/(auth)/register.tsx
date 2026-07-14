@@ -73,7 +73,7 @@ export default function RegisterScreen() {
                 name="displayName"
                 render={({ field, fieldState }) => (
                   <TextField
-                    placeholder="Jarik Mutig"
+                    placeholder="Enter your username"
                     autoCapitalize="words"
                     value={field.value}
                     onChangeText={field.onChange}
@@ -95,7 +95,7 @@ export default function RegisterScreen() {
                 name="email"
                 render={({ field, fieldState }) => (
                   <TextField
-                    placeholder="jarik@gmail.com"
+                    placeholder="Enter your email"
                     autoCapitalize="none"
                     autoComplete="email"
                     keyboardType="email-address"
@@ -116,7 +116,7 @@ export default function RegisterScreen() {
                 name="password"
                 render={({ field, fieldState }) => (
                   <TextField
-                    placeholder="Password"
+                    placeholder="Enter your password"
                     secureTextEntry={!passwordVisible}
                     autoComplete="password-new"
                     textContentType="newPassword"
