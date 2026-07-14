@@ -2,7 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 
-import { colors, radius, silver, spacing, typography } from '@/theme';
+import { colors, overlay, radius, silver, spacing, typography } from '@/theme';
 
 type Variant = 'cta' | 'primary' | 'secondary' | 'ghost' | 'danger';
 type Size = 'md' | 'lg';
@@ -53,7 +53,7 @@ function MetalCTA({
       <LinearGradient
         // Brightest step of the shared silver ladder — pure white top,
         // fading through silver-50/100/200 toward the bottom edge.
-        colors={['#FFFFFF', silver[50], silver[100], silver[200]]}
+        colors={[colors.white, silver[50], silver[100], silver[200]]}
         locations={[0, 0.32, 0.72, 1]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
@@ -62,7 +62,7 @@ function MetalCTA({
         {/* Fine top sheen — polished metal edge */}
         <View pointerEvents="none" style={ctaStyles.topSheen} />
         {loading ? (
-          <ActivityIndicator color="#0A0A0F" />
+          <ActivityIndicator color={colors.textOnLight} />
         ) : (
           <View style={plainStyles.row}>
             {leadingIcon ? <View style={plainStyles.icon}>{leadingIcon}</View> : null}
@@ -118,7 +118,7 @@ const ctaStyles = StyleSheet.create({
   shadow: {
     borderRadius: radius.pill,
     // Dark drop-shadow — makes the light pill pop forward off the dark bg.
-    shadowColor: '#000000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.45,
     shadowRadius: 14,
@@ -142,11 +142,11 @@ const ctaStyles = StyleSheet.create({
     left: '12%',
     right: '12%',
     height: 1,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: overlay.whiteBright,
     borderRadius: 1,
   },
   label: {
-    color: '#0A0A0F',
+    color: colors.textOnLight,
     fontWeight: '700',
     fontSize: 17,
     letterSpacing: 0.2,
@@ -192,7 +192,7 @@ const plainVariants = {
   },
   danger: {
     container: { backgroundColor: colors.danger },
-    pressed: { backgroundColor: '#E14A4F' },
+    pressed: { backgroundColor: colors.dangerPressed },
     label: { color: colors.primaryText },
   },
 } as const;

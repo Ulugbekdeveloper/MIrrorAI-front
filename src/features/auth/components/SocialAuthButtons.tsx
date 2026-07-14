@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     height: 56,
     borderRadius: radius.pill,
-    backgroundColor: '#17181C',
+    backgroundColor: colors.chip,
   },
-  pillPressed: { backgroundColor: '#101115' },
+  pillPressed: { backgroundColor: colors.chipPressed },
   label: { ...typography.bodyStrong, color: colors.text },
 });

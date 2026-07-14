@@ -1,7 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
-type Key = 'accessToken' | 'refreshToken' | 'onboardingSeen';
+type Key = 'accessToken' | 'refreshToken' | 'onboardingSeen' | 'personalizationSeen';
 
 const memoryFallback = new Map<string, string>();
 const canUseSecureStore = Platform.OS !== 'web';

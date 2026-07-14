@@ -12,6 +12,8 @@ type AuthState = {
   user: User | null;
   accessToken: string | null;
   refreshToken: string | null;
+  /** Has this device completed the post-login personalization questions? */
+  personalizationSeen: boolean;
 
   hydrate: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
@@ -23,6 +25,7 @@ type AuthState = {
     fullName?: AppleFullName;
   }) => Promise<void>;
   logout: () => Promise<void>;
+  completePersonalization: () => Promise<void>;
 
   /** Internal — used by the http client via the auth bridge. */
   _refresh: () => Promise<string | null>;
@@ -57,12 +60,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   accessToken: null,
   refreshToken: null,
+  personalizationSeen: false,
 
   hydrate: async () => {
-    const [accessToken, refreshToken] = await Promise.all([
+    const [accessToken, refreshToken, personalizationSeenValue] = await Promise.all([
       secureStorage.get('accessToken'),
       secureStorage.get('refreshToken'),
+      secureStorage.get('personalizationSeen'),
     ]);
+    set({ personalizationSeen: personalizationSeenValue === 'true' });
+
     if (!accessToken || !refreshToken) {
       set({ status: 'unauthenticated' });
       return;
@@ -145,6 +152,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       accessToken: null,
       refreshToken: null,
     });
+  },
+
+  completePersonalization: async () => {
+    // Device-level flag, same tradeoff as `onboardingSeen` — a different
+    // account signing into this device won't be asked again. The real fix
+    // is a field on the user's backend profile; swap this out once one
+    // exists.
+    await secureStorage.set('personalizationSeen', 'true');
+    set({ personalizationSeen: true });
   },
 
   _refresh: async () => {

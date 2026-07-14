@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing, typography } from '@/theme';
+import { colors, overlay, spacing, typography } from '@/theme';
 
 type Props = {
   icon: keyof typeof Ionicons.glyphMap;
@@ -45,11 +45,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: overlay.whiteMedium,
   },
   tint: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    backgroundColor: overlay.whiteSoft,
   },
   label: { ...typography.caption, color: colors.textMuted },
 });

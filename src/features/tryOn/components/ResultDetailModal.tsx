@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors, radius, spacing } from '@/theme';
+import { colors, overlay, radius, spacing } from '@/theme';
 import { Button } from '@/ui';
 
 import { CircleIconButton } from './CircleIconButton';
@@ -126,7 +126,7 @@ export function ResultDetailModal({
 const styles = StyleSheet.create({
   dim: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+    backgroundColor: overlay.blackFaint,
   },
   sheetOuter: {
     flex: 1,
@@ -134,12 +134,12 @@ const styles = StyleSheet.create({
   },
   sheet: {
     maxHeight: '90%',
-    backgroundColor: '#0B0B0F',
+    backgroundColor: colors.surfaceSunken,
     borderTopLeftRadius: radius.xl,
     borderTopRightRadius: radius.xl,
     borderWidth: 1,
     borderBottomWidth: 0,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: overlay.whiteSoft,
   },
   sheetInner: {
     paddingHorizontal: spacing.lg,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: overlay.whiteStrong,
   },
   closeButton: {
     position: 'absolute',
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: overlay.whiteSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },

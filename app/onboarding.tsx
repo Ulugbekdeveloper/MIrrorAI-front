@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { slides } from '@/features/onboarding/slides';
 import { secureStorage } from '@/lib/storage';
-import { spacing, typography } from '@/theme';
+import { colors, overlay, spacing, typography } from '@/theme';
 import { Button } from '@/ui';
 
 // Matches the image's `transition={IMAGE_TRANSITION_MS}` below so the text
@@ -102,7 +102,7 @@ export default function OnboardingScreen() {
           full black sooner) so the title/description/button sit on solid
           black for maximum contrast. */}
       <LinearGradient
-        colors={['#000000', 'transparent', 'transparent', '#000000', '#000000']}
+        colors={[colors.black, 'transparent', 'transparent', colors.black, colors.black]}
         locations={[0, 0.3, 0.5, 0.78, 1]}
         style={StyleSheet.absoluteFill}
       />
@@ -169,7 +169,7 @@ export default function OnboardingScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#000000' },
+  root: { flex: 1, backgroundColor: colors.black },
   safe: { flex: 1, paddingHorizontal: spacing.lg },
 
   // Fills the vertical gap between topRow and bottomBlock — this is where
@@ -193,17 +193,17 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 3,
     borderRadius: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    backgroundColor: overlay.whiteStrong,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     borderRadius: 2,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
   },
   skip: {
     ...typography.bodyStrong,
-    color: 'rgba(255, 255, 255, 0.85)',
+    color: overlay.whiteBright,
   },
 
   bottomBlock: {
@@ -213,10 +213,10 @@ const styles = StyleSheet.create({
   textBlock: { gap: spacing.sm },
   title: {
     ...typography.displaySm,
-    color: '#FFFFFF',
+    color: colors.white,
   },
   description: {
     ...typography.body,
-    color: 'rgba(229, 229, 234, 0.8)',
+    color: overlay.whiteBody,
   },
 });

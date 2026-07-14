@@ -10,7 +10,7 @@ import { ClothingItemCard } from '@/features/tryOn/components/ClothingItemCard';
 import { ClothingTabBar } from '@/features/tryOn/components/ClothingTabBar';
 import { useImagePicker } from '@/features/tryOn/hooks/useImagePicker';
 import { useTryOnDraftStore } from '@/features/tryOn/state';
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, overlay, radius, spacing, typography } from '@/theme';
 import { BackButton, Button } from '@/ui';
 
 export default function StudioScreen() {
@@ -113,7 +113,7 @@ export default function StudioScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#000000' },
+  root: { flex: 1, backgroundColor: colors.black },
   safe: { flex: 1 },
 
   header: {
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xxs,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    backgroundColor: colors.overlay,
     borderRadius: radius.pill,
     paddingVertical: spacing.xxs,
     paddingHorizontal: spacing.sm,
@@ -153,8 +153,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.xl,
     borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderColor: 'rgba(255, 255, 255, 0.18)',
-    backgroundColor: '#0A0A0C',
+    borderColor: overlay.whiteStrong,
+    backgroundColor: colors.surfaceSunken,
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.sm,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: overlay.whiteSubtle,
     alignItems: 'center',
     justifyContent: 'center',
   },

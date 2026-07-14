@@ -1,7 +1,8 @@
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useTryOnDraftStore } from '@/features/tryOn/state';
+import { secureStorage } from '@/lib/storage';
 import { useAuthStore } from '@/stores/authStore';
 import { colors, spacing, typography } from '@/theme';
 import { Button, Card, ScreenContainer } from '@/ui';
@@ -46,6 +47,21 @@ export default function HomeScreen() {
       <View style={styles.footer}>
         <Button label="Sign out" variant="ghost" onPress={() => void logout()} />
       </View>
+
+      {/* DEV ONLY — replay the personalize questions without logging out.
+          Delete this block once personalization is finalized. */}
+      {__DEV__ ? (
+        <Pressable
+          style={styles.devReplay}
+          onPress={async () => {
+            await secureStorage.remove('personalizationSeen');
+            useAuthStore.setState({ personalizationSeen: false });
+            router.push('/(app)/personalize');
+          }}
+        >
+          <Text style={styles.devReplayText}>[dev] Replay personalize questions</Text>
+        </Pressable>
+      ) : null}
     </ScreenContainer>
   );
 }
@@ -59,4 +75,6 @@ const styles = StyleSheet.create({
   heroTitle: { ...typography.titleLg, color: colors.text },
   heroBody: { ...typography.body, color: colors.textMuted },
   footer: { paddingVertical: spacing.md },
+  devReplay: { alignItems: 'center', paddingBottom: spacing.md },
+  devReplayText: { ...typography.caption, color: colors.textDim },
 });

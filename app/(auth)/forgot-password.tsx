@@ -17,7 +17,7 @@ import {
   forgotPasswordSchema,
   type ForgotPasswordInput,
 } from '@/features/auth/schemas';
-import { colors, spacing, typography } from '@/theme';
+import { colors, overlay, spacing, typography } from '@/theme';
 import { BackButton, Button, ScreenContainer, TextField } from '@/ui';
 
 export default function ForgotPasswordScreen() {
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: overlay.whiteSoft,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.xs,

@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
   },
   tabActive: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
   },
   label: {
     ...typography.caption,
@@ -54,6 +54,6 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   labelActive: {
-    color: '#0A0A0F',
+    color: colors.textOnLight,
   },
 });

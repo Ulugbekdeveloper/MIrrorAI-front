@@ -15,7 +15,7 @@ import {
   type TextInputProps,
 } from 'react-native';
 
-import { colors, finish, radius, spacing, typography } from '@/theme';
+import { colors, finish, overlay, radius, spacing, typography } from '@/theme';
 
 type Props = TextInputProps & {
   leftIcon?: ReactNode;
@@ -44,8 +44,8 @@ export const TextField = forwardRef<TextInput, Props>(function TextField(
       <LinearGradient
         colors={
           focused
-            ? ['rgba(207, 213, 219, 0.12)', 'rgba(207, 213, 219, 0.03)']
-            : ['rgba(207, 213, 219, 0.06)', 'rgba(207, 213, 219, 0.015)']
+            ? [overlay.glassFocusTop, overlay.glassFocusBottom]
+            : [overlay.glassTop, overlay.glassBottom]
         }
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
@@ -64,8 +64,8 @@ export const TextField = forwardRef<TextInput, Props>(function TextField(
           {leftIcon ? <View style={styles.leftIconWrap}>{leftIcon}</View> : null}
           <TextInput
             ref={inputRef}
-            placeholderTextColor="rgba(207, 213, 219, 0.38)"
-            selectionColor="rgba(255, 255, 255, 0.85)"
+            placeholderTextColor={overlay.silverPlaceholder}
+            selectionColor={overlay.whiteBright}
             {...rest}
             onFocus={(e) => {
               setFocused(true);
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     borderColor: finish.borderFocus,
     borderWidth: 1.5,
   },
-  pillError: { borderColor: 'rgba(255, 90, 95, 0.75)' },
+  pillError: { borderColor: overlay.dangerBorder },
   topHighlight: {
     position: 'absolute',
     top: 0,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     height: ICON_SIZE,
     borderRadius: ICON_SIZE / 2,
     // Darker inset well — the icon sits "indented" into the glass pill.
-    backgroundColor: 'rgba(8, 10, 14, 0.5)',
+    backgroundColor: overlay.wellInset,
     borderWidth: 1,
     borderColor: finish.border,
     alignItems: 'center',

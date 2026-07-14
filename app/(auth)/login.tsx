@@ -27,10 +27,14 @@ export default function LoginScreen() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const { control, handleSubmit, formState } = useForm<LoginInput>({
+  const { control, handleSubmit, watch, formState } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
+
+  const emailValue = watch('email');
+  const passwordValue = watch('password');
+  const isFormEmpty = !emailValue?.trim() || !passwordValue?.trim();
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null);
@@ -59,10 +63,10 @@ export default function LoginScreen() {
           <View style={styles.top}>
             <View style={styles.header}>
               <Text style={styles.title}>
-                Welcome back<Text style={styles.wave}>👋</Text>
+                Welcome<Text style={styles.wave}> 👋</Text>
               </Text>
               <Text style={styles.subtitle}>
-                 See yourself in any outfit before buying.
+                  Log in or Sign up in seconds to start trying on clothes virtually.
               </Text>
             </View>
 
@@ -138,10 +142,11 @@ export default function LoginScreen() {
               ) : null}
 
               <Button
-                label="Log In"
+                label="Continue"
                 variant="cta"
                 onPress={onSubmit}
                 loading={formState.isSubmitting}
+                disabled={isFormEmpty}
               />
             </View>
 
@@ -150,13 +155,12 @@ export default function LoginScreen() {
               <SocialAuthButtons onError={setSubmitError} />
             </View>
           </View>
-
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Don&apos;t have an account? </Text>
+          {/* <View style={styles.footer}>
+            <Text style={styles.footerText}>Already ? </Text>
             <Link href="/(auth)/register" style={styles.link}>
               Sign up
             </Link>
-          </View>
+          </View> */}
 
           {/* DEV ONLY — replay onboarding without reinstalling the app.
               Delete this block once onboarding is finalized. */}

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, overlay, radius, spacing, typography } from '@/theme';
 
 import type { ClothingItem } from '../catalog';
 
@@ -65,15 +65,15 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     overflow: 'hidden',
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: overlay.whiteSoft,
   },
   swatch: { flex: 1 },
   glow: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
-    shadowColor: '#FFFFFF',
+    borderColor: overlay.whiteBright,
+    shadowColor: colors.white,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 12,

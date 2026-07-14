@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import Svg, { Defs, LinearGradient, RadialGradient, Rect, Stop } from 'react-native-svg';
 
-import { silver } from '@/theme';
+import { colors, silver } from '@/theme';
 
 /**
  * Page background — three layered gradients:
@@ -49,10 +49,10 @@ export function GradientBackground() {
           x2="0" y2="1"
           gradientUnits="objectBoundingBox"
         >
-          <Stop offset="0" stopColor="#000000" stopOpacity="0" />
-          <Stop offset="0.55" stopColor="#000000" stopOpacity="0" />
-          <Stop offset="0.8" stopColor="#000000" stopOpacity="0.55" />
-          <Stop offset="1" stopColor="#000000" stopOpacity="0.85" />
+          <Stop offset="0" stopColor={colors.black} stopOpacity="0" />
+          <Stop offset="0.55" stopColor={colors.black} stopOpacity="0" />
+          <Stop offset="0.8" stopColor={colors.black} stopOpacity="0.55" />
+          <Stop offset="1" stopColor={colors.black} stopOpacity="0.85" />
         </LinearGradient>
       </Defs>
       <Rect x="0" y="0" width="100%" height="100%" fill="url(#mirrorBg)" />
