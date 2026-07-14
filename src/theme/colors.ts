@@ -77,6 +77,8 @@ export const overlay = {
   wellInset: withAlpha(silver[950], 0.5),
 
   dangerBorder: withAlpha(DANGER, 0.75),
+  dangerOutline: withAlpha(DANGER, 0.4),
+  dangerTint: withAlpha(DANGER, 0.15),
 } as const;
 
 /** Silver-tinted overlays reused across surfaces for a consistent finish. */
