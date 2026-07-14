@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",
+    "@react-native-community/datetimepicker": "8.4.4",
     "@hookform/resolvers": "^3.10.0",
     "@tanstack/react-query": "^5.62.0",
     "expo": "^54.0.0",
@@ -26,6 +27,7 @@
     "expo-image-picker": "~17.0.11",
     "expo-linear-gradient": "~15.0.7",
     "expo-linking": "~8.0.12",
+    "expo-location": "~19.0.7",
     "expo-media-library": "~18.2.0",
     "expo-router": "~6.0.24",
     "expo-secure-store": "~15.0.8",

@@ -55,8 +55,10 @@ export default function HomeScreen() {
           style={styles.devReplay}
           onPress={async () => {
             await secureStorage.remove('personalizationSeen');
+            // Flipping this triggers (app)/_layout.tsx's own guard to
+            // redirect here — an extra router.push() would race that
+            // redirect and throw "PUSH not handled by any navigator".
             useAuthStore.setState({ personalizationSeen: false });
-            router.push('/(app)/personalize');
           }}
         >
           <Text style={styles.devReplayText}>[dev] Replay personalize questions</Text>
