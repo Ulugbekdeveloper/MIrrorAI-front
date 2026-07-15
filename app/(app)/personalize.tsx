@@ -67,6 +67,13 @@ export default function PersonalizeScreen() {
         return (
           <StyleGoalStep selectedGoal={answers.styleGoal} onSelectGoal={answers.setStyleGoal} />
         );
+        case 'discovery-source':
+        return (
+          <DiscoverySourceStep
+            selectedSource={answers.discoverySource}
+            onSelectSource={handleSelectDiscoverySource}
+          />
+        );
       case 'selfie':
         return (
           <SelfieStep
@@ -75,13 +82,7 @@ export default function PersonalizeScreen() {
             onChooseFromLibrary={() => void handleChooseFromLibrary()}
           />
         );
-      case 'discovery-source':
-        return (
-          <DiscoverySourceStep
-            selectedSource={answers.discoverySource}
-            onSelectSource={handleSelectDiscoverySource}
-          />
-        );
+     
       case 'weather-permission':
         return <WeatherPermissionStep onRequestAccess={() => void requestLocationAccess()} />;
       case 'birthday':

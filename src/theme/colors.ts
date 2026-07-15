@@ -36,6 +36,7 @@ export const silver = {
 const WHITE = '#FFFFFF';
 const BLACK = '#000000';
 const DANGER = '#FF5A5F';
+const SUCCESS = '#3ECF8E';
 
 /**
  * Every translucent white/black/silver/danger overlay used anywhere in
@@ -79,6 +80,9 @@ export const overlay = {
   dangerBorder: withAlpha(DANGER, 0.75),
   dangerOutline: withAlpha(DANGER, 0.4),
   dangerTint: withAlpha(DANGER, 0.15),
+
+  successOutline: withAlpha(SUCCESS, 0.4),
+  successTint: withAlpha(SUCCESS, 0.15),
 } as const;
 
 /** Silver-tinted overlays reused across surfaces for a consistent finish. */
@@ -117,7 +121,7 @@ export const colors = {
   danger: DANGER,
   dangerPressed: '#E14A4F',
   warning: '#FFB13B',
-  success: '#3ECF8E',
+  success: SUCCESS,
 
   overlay: overlay.blackMedium,
 } as const;

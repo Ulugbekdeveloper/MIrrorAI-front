@@ -6,13 +6,14 @@ import { colors, overlay, radius, spacing, typography } from '@/theme';
 
 import { StepHeading } from '../StepHeading';
 
-const MOST_WORN_IMAGE = require('@assets/brand/top.avif');
+const MOST_WORN_IMAGE = require('@assets/brand/top.jpeg');
 const RARELY_WORN_IMAGE = require('@assets/brand/costume.avif');
 
 const PURCHASE_BENEFITS = [
-  'Reduce impulse buys',
-  'Find meaningful pieces',
-  "Sell or donate what you're not wearing",
+  'Try before you buy',
+  'See it before you own it',
+  "Shop smarter with AI",
+  "Find your perfect fit",
 ];
 
 export function CostPerWearStep() {
@@ -38,7 +39,7 @@ export function CostPerWearStep() {
       <View style={styles.benefitList}>
         {PURCHASE_BENEFITS.map((benefit) => (
           <View key={benefit} style={styles.benefitRow}>
-            <Ionicons name="checkmark" size={18} color={colors.text} />
+            <Ionicons name="checkmark" size={18} color={colors.success} />
             <Text style={styles.benefitLabel}>{benefit}</Text>
           </View>
         ))}
@@ -54,18 +55,19 @@ type WearStatCardProps = {
   costPerWear: string;
 };
 
+// Both cards share one structure (banner → image → price → caption) so
+// they're always the same size regardless of tone — no per-tone margin
+// hacks trying to approximate matching heights after the fact.
 function WearStatCard({ tone, label, image, costPerWear }: WearStatCardProps) {
   const isNegative = tone === 'negative';
 
   return (
     <View style={[styles.card, isNegative ? styles.cardNegative : styles.cardPositive]}>
-      {isNegative ? (
-        <View style={styles.cardBannerNegative}>
-          <Text style={styles.cardBannerNegativeText}>{label}</Text>
-        </View>
-      ) : (
-        <Text style={styles.cardLabel}>{label}</Text>
-      )}
+      <View style={[styles.cardBanner, isNegative ? styles.cardBannerNegative : styles.cardBannerPositive]}>
+        <Text style={[styles.cardBannerText, isNegative ? styles.cardBannerTextNegative : styles.cardBannerTextPositive]}>
+          {label}
+        </Text>
+      </View>
       <View style={styles.cardImageWrap}>
         <Image source={image} style={styles.cardImage} contentFit="contain" />
       </View>
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: spacing.sm,
     marginTop: spacing.md,
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
   },
   card: {
     flex: 1,
@@ -95,17 +97,12 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   cardPositive: {
-    marginTop: spacing.md,
+    borderColor: overlay.successOutline,
   },
   cardNegative: {
     borderColor: overlay.dangerOutline,
   },
-  cardLabel: {
-    ...typography.caption,
-    color: colors.textMuted,
-    fontWeight: '600',
-  },
-  cardBannerNegative: {
+  cardBanner: {
     alignSelf: 'stretch',
     marginHorizontal: -spacing.sm,
     marginTop: -spacing.md,
@@ -113,14 +110,16 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
     borderTopLeftRadius: radius.xl,
     borderTopRightRadius: radius.xl,
-    backgroundColor: overlay.dangerTint,
     alignItems: 'center',
   },
-  cardBannerNegativeText: {
+  cardBannerPositive: { backgroundColor: overlay.successTint },
+  cardBannerNegative: { backgroundColor: overlay.dangerTint },
+  cardBannerText: {
     ...typography.caption,
-    color: colors.danger,
     fontWeight: '700',
   },
+  cardBannerTextPositive: { color: colors.success },
+  cardBannerTextNegative: { color: colors.danger },
   cardImageWrap: {
     width: '100%',
     aspectRatio: 1,
@@ -150,7 +149,7 @@ const styles = StyleSheet.create({
   },
   benefitLabel: {
     ...typography.bodyStrong,
-    color: colors.text,
+    color: colors.success,
     flex: 1,
   },
 });

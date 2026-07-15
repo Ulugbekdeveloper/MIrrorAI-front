@@ -1,8 +1,8 @@
 export const PERSONALIZATION_STEPS = [
   'gender',
   'style-goal',
-  'selfie',
   'discovery-source',
+  'selfie',
   'weather-permission',
   'birthday',
   'username',
