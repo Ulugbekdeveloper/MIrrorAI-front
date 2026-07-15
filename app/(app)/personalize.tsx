@@ -12,6 +12,8 @@ import {
   ShoppingFrequencyStep,
   SkipButton,
   StyleGoalStep,
+  StyleProfileStep,
+  StyleTypeStep,
   UsernameStep,
   useLocationPermission,
   usePersonalizationAnswers,
@@ -67,7 +69,14 @@ export default function PersonalizeScreen() {
         return (
           <StyleGoalStep selectedGoal={answers.styleGoal} onSelectGoal={answers.setStyleGoal} />
         );
-        case 'discovery-source':
+      case 'style-type':
+        return (
+          <StyleTypeStep
+            selectedStyleType={answers.styleType}
+            onSelectStyleType={answers.setStyleType}
+          />
+        );
+      case 'discovery-source':
         return (
           <DiscoverySourceStep
             selectedSource={answers.discoverySource}
@@ -104,6 +113,8 @@ export default function PersonalizeScreen() {
         );
       case 'cost-per-wear':
         return <CostPerWearStep />;
+      case 'style-profile':
+        return <StyleProfileStep selectedStyleType={answers.styleType} />;
     }
   };
 
@@ -120,6 +131,15 @@ export default function PersonalizeScreen() {
             variant="cta"
             onPress={flow.goToNextStep}
             disabled={!answers.styleGoal}
+          />
+        );
+      case 'style-type':
+        return (
+          <Button
+            label="Next"
+            variant="cta"
+            onPress={flow.goToNextStep}
+            disabled={!answers.styleType}
           />
         );
       case 'selfie':
@@ -160,6 +180,8 @@ export default function PersonalizeScreen() {
           />
         );
       case 'cost-per-wear':
+        return <Button label="Next" variant="cta" onPress={flow.goToNextStep} />;
+      case 'style-profile':
         return (
           <Button label="Next" variant="cta" onPress={() => void flow.finishPersonalization()} />
         );

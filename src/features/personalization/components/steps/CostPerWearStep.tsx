@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardBannerPositive: { backgroundColor: overlay.successTint },
-  cardBannerNegative: { backgroundColor: overlay.dangerTint },
+  cardBannerNegative: { backgroundColor: 'transparent' },
   cardBannerText: {
     ...typography.caption,
     fontWeight: '700',

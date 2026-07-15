@@ -1,13 +1,15 @@
 export const PERSONALIZATION_STEPS = [
   'gender',
-  'style-goal',
   'discovery-source',
-  'selfie',
-  'weather-permission',
+  'style-goal',
+  'style-type',
   'birthday',
+  'selfie',
   'username',
+  'weather-permission',
   'shopping-frequency',
   'cost-per-wear',
+  'style-profile',
 ] as const;
 
 export const MINIMUM_AGE_YEARS = 13;

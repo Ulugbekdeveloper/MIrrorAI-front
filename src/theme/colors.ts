@@ -37,6 +37,7 @@ const WHITE = '#FFFFFF';
 const BLACK = '#000000';
 const DANGER = '#FF5A5F';
 const SUCCESS = '#3ECF8E';
+const PRIMARY = '#7C5CFF';
 
 /**
  * Every translucent white/black/silver/danger overlay used anywhere in
@@ -83,6 +84,9 @@ export const overlay = {
 
   successOutline: withAlpha(SUCCESS, 0.4),
   successTint: withAlpha(SUCCESS, 0.15),
+
+  primaryOutline: withAlpha(PRIMARY, 0.6),
+  primaryTint: withAlpha(PRIMARY, 0.2),
 } as const;
 
 /** Silver-tinted overlays reused across surfaces for a consistent finish. */
@@ -113,7 +117,7 @@ export const colors = {
   /** Dark text sitting on a white/silver surface — CTA button labels. */
   textOnLight: '#0A0A0F',
 
-  primary: '#7C5CFF',
+  primary: PRIMARY,
   primaryPressed: '#6849E8',
   primaryText: '#FFFFFF',
 

@@ -16,8 +16,15 @@ export { GenderStep } from './components/steps/GenderStep';
 export { SelfieStep } from './components/steps/SelfieStep';
 export { ShoppingFrequencyStep } from './components/steps/ShoppingFrequencyStep';
 export { StyleGoalStep } from './components/steps/StyleGoalStep';
+export { StyleProfileStep } from './components/steps/StyleProfileStep';
+export { StyleTypeStep } from './components/steps/StyleTypeStep';
 export { UsernameStep } from './components/steps/UsernameStep';
 export { WeatherPermissionStep } from './components/steps/WeatherPermissionStep';
+
+export { STYLE_TYPE_OPTIONS } from './styleTypes';
+export type { StyleTypeKey, StyleTypeOption } from './styleTypes';
+
+export type { StyleProfileAxis } from './styleProfile';
 
 export type {
   DiscoverySourceKey,
