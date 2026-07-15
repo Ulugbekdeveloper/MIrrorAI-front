@@ -25,6 +25,7 @@ export function UsernameStep({ username, onChangeUsername }: Props) {
         maxLength={USERNAME_MAX_LENGTH}
         value={username}
         onChangeText={onChangeUsername}
+        leftIcon={<Ionicons name="person-outline" size={20} color={colors.textMuted} />}
       />
 
       <Text style={styles.counter}>

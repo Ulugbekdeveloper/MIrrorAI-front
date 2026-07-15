@@ -10,6 +10,8 @@ export const PERSONALIZATION_STEPS = [
   'shopping-frequency',
   'cost-per-wear',
   'style-profile',
+  'trial-offer',
+  'trial-reminder',
 ] as const;
 
 export const MINIMUM_AGE_YEARS = 13;

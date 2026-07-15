@@ -14,6 +14,10 @@ import {
   StyleGoalStep,
   StyleProfileStep,
   StyleTypeStep,
+  TrialOfferFooterExtras,
+  TrialOfferStep,
+  TrialReminderFooterExtras,
+  TrialReminderStep,
   UsernameStep,
   useLocationPermission,
   usePersonalizationAnswers,
@@ -25,7 +29,7 @@ import {
 import { useImagePicker } from '@/features/tryOn/hooks/useImagePicker';
 import { useTryOnDraftStore } from '@/features/tryOn/state';
 import { spacing } from '@/theme';
-import { BackButton, Button, ScreenContainer } from '@/ui';
+import { Button, ScreenContainer } from '@/ui';
 
 export default function PersonalizeScreen() {
   const { captureFromCamera, pickFromLibrary } = useImagePicker();
@@ -115,6 +119,10 @@ export default function PersonalizeScreen() {
         return <CostPerWearStep />;
       case 'style-profile':
         return <StyleProfileStep selectedStyleType={answers.styleType} />;
+      case 'trial-offer':
+        return <TrialOfferStep />;
+      case 'trial-reminder':
+        return <TrialReminderStep />;
     }
   };
 
@@ -182,18 +190,26 @@ export default function PersonalizeScreen() {
       case 'cost-per-wear':
         return <Button label="Next" variant="cta" onPress={flow.goToNextStep} />;
       case 'style-profile':
+        return <Button label="Next" variant="cta" onPress={flow.goToNextStep} />;
+      case 'trial-offer':
         return (
-          <Button label="Next" variant="cta" onPress={() => void flow.finishPersonalization()} />
+          <View style={styles.stackedFooter}>
+            <Button label="Next" variant="cta" onPress={flow.goToNextStep} />
+            <TrialOfferFooterExtras />
+          </View>
+        );
+      case 'trial-reminder':
+        return (
+          <View style={styles.stackedFooter}>
+            <Button label="Next" variant="cta" onPress={() => void flow.finishPersonalization()} />
+            <TrialReminderFooterExtras />
+          </View>
         );
     }
   };
 
   return (
     <ScreenContainer gradient>
-      <View style={styles.headerRow}>
-        {flow.isFirstStep ? null : <BackButton onPress={flow.goToPreviousStep} />}
-      </View>
-
       <Animated.View
         style={[
           styles.stepContainer,
@@ -216,10 +232,9 @@ export default function PersonalizeScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerRow: { flexDirection: 'row', paddingTop: spacing.sm, minHeight: 44 },
   stepContainer: { flex: 1 },
   scrollArea: { flex: 1 },
-  scrollContent: { gap: spacing.xl, paddingTop: spacing.md },
+  scrollContent: { gap: spacing.xl, paddingTop: spacing.lg },
   footer: { paddingTop: spacing.lg, paddingBottom: spacing.md },
   stackedFooter: { gap: spacing.xs },
 });

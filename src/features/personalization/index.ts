@@ -18,6 +18,11 @@ export { ShoppingFrequencyStep } from './components/steps/ShoppingFrequencyStep'
 export { StyleGoalStep } from './components/steps/StyleGoalStep';
 export { StyleProfileStep } from './components/steps/StyleProfileStep';
 export { StyleTypeStep } from './components/steps/StyleTypeStep';
+export { TrialOfferFooterExtras, TrialOfferStep } from './components/steps/TrialOfferStep';
+export {
+  TrialReminderFooterExtras,
+  TrialReminderStep,
+} from './components/steps/TrialReminderStep';
 export { UsernameStep } from './components/steps/UsernameStep';
 export { WeatherPermissionStep } from './components/steps/WeatherPermissionStep';
 
