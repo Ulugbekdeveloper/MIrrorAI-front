@@ -3,6 +3,8 @@ import { Animated, ScrollView, StyleSheet, View } from 'react-native';
 import {
   AUTO_ADVANCE_DELAY_MS,
   BirthdayStep,
+  ChoosePlanFooterExtras,
+  ChoosePlanStep,
   CostPerWearStep,
   DiscoverySourceStep,
   GenderStep,
@@ -123,6 +125,10 @@ export default function PersonalizeScreen() {
         return <TrialOfferStep />;
       case 'trial-reminder':
         return <TrialReminderStep />;
+      case 'choose-plan':
+        return (
+          <ChoosePlanStep selectedPlan={answers.selectedPlan} onSelectPlan={answers.setSelectedPlan} />
+        );
     }
   };
 
@@ -201,8 +207,21 @@ export default function PersonalizeScreen() {
       case 'trial-reminder':
         return (
           <View style={styles.stackedFooter}>
-            <Button label="Next" variant="cta" onPress={() => void flow.finishPersonalization()} />
+            <Button label="Next" variant="cta" onPress={flow.goToNextStep} />
             <TrialReminderFooterExtras />
+          </View>
+        );
+      case 'choose-plan':
+        return (
+          <View style={styles.stackedFooter}>
+            {/* TODO(backend): wire the selected plan + trial toggle into a real
+                IAP flow (RevenueCat/StoreKit/Play Billing) once one exists. */}
+            <Button
+              label="Continue"
+              variant="cta"
+              onPress={() => void flow.finishPersonalization()}
+            />
+            <ChoosePlanFooterExtras />
           </View>
         );
     }

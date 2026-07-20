@@ -12,6 +12,7 @@ export const PERSONALIZATION_STEPS = [
   'style-profile',
   'trial-offer',
   'trial-reminder',
+  'choose-plan',
 ] as const;
 
 export const MINIMUM_AGE_YEARS = 13;

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import type { PlanKey } from '../plans';
 import type { StyleTypeKey } from '../styleTypes';
 import type {
   DiscoverySourceKey,
@@ -13,6 +14,7 @@ export function usePersonalizationAnswers() {
   const [styleGoal, setStyleGoal] = useState<StyleGoalKey | null>(null);
   const [styleType, setStyleType] = useState<StyleTypeKey | null>(null);
   const [discoverySource, setDiscoverySource] = useState<DiscoverySourceKey | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<PlanKey>('yearly');
   const [birthday, setBirthday] = useState(new Date());
   const [hasPickedBirthday, setHasPickedBirthday] = useState(false);
   const [username, setUsername] = useState('');
@@ -36,6 +38,8 @@ export function usePersonalizationAnswers() {
     setStyleType,
     discoverySource,
     setDiscoverySource,
+    selectedPlan,
+    setSelectedPlan,
     birthday,
     hasPickedBirthday,
     pickBirthday,

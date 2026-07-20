@@ -10,6 +10,7 @@ export { useStepEntranceAnimation } from './hooks/useStepEntranceAnimation';
 
 export { SkipButton } from './components/SkipButton';
 export { BirthdayStep } from './components/steps/BirthdayStep';
+export { ChoosePlanFooterExtras, ChoosePlanStep } from './components/steps/ChoosePlanStep';
 export { CostPerWearStep } from './components/steps/CostPerWearStep';
 export { DiscoverySourceStep } from './components/steps/DiscoverySourceStep';
 export { GenderStep } from './components/steps/GenderStep';
@@ -30,6 +31,8 @@ export { STYLE_TYPE_OPTIONS } from './styleTypes';
 export type { StyleTypeKey, StyleTypeOption } from './styleTypes';
 
 export type { StyleProfileAxis } from './styleProfile';
+
+export type { PlanKey } from './plans';
 
 export type {
   DiscoverySourceKey,
