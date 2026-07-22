@@ -35,7 +35,6 @@ import { Button, ScreenContainer } from '@/ui';
 
 export default function PersonalizeScreen() {
   const { captureFromCamera, pickFromLibrary } = useImagePicker();
-  const selfie = useTryOnDraftStore((state) => state.person);
   const setSelfie = useTryOnDraftStore((state) => state.setPerson);
 
   const flow = usePersonalizationFlow();
@@ -93,7 +92,6 @@ export default function PersonalizeScreen() {
       case 'selfie':
         return (
           <SelfieStep
-            photo={selfie}
             onTakeSelfie={() => void handleTakeSelfie()}
             onChooseFromLibrary={() => void handleChooseFromLibrary()}
           />
