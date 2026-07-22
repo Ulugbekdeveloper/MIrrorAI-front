@@ -19,7 +19,12 @@ export function OptionRow<TKey extends string>({ option, selected, onPress }: Pr
           <Text style={styles.emoji}>{option.emoji}</Text>
         </View>
       ) : null}
-      <Text style={styles.label}>{option.label}</Text>
+      <View style={styles.textWrap}>
+        <Text style={styles.label}>{option.label}</Text>
+        {option.description ? (
+          <Text style={styles.description}>{option.description}</Text>
+        ) : null}
+      </View>
       {selected ? <Ionicons name="checkmark-circle" size={22} color={colors.white} /> : null}
     </Pressable>
   );
@@ -51,5 +56,7 @@ const styles = StyleSheet.create({
   },
   iconWrapSelected: { backgroundColor: overlay.whiteMedium },
   emoji: { fontSize: 22 },
-  label: { ...typography.bodyStrong, color: colors.text, flex: 1 },
+  textWrap: { flex: 1, gap: 2 },
+  label: { ...typography.bodyStrong, color: colors.text },
+  description: { ...typography.caption, color: colors.textMuted },
 });

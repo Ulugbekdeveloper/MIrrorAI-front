@@ -31,8 +31,8 @@ export const DISCOVERY_SOURCE_OPTIONS: SelectableOption<DiscoverySourceKey>[] = 
 ];
 
 export const SHOPPING_FREQUENCY_OPTIONS: SelectableOption<ShoppingFrequencyKey>[] = [
-  { key: 'weekly', label: 'Weekly' },
-  { key: 'monthly', label: 'Monthly' },
-  { key: 'seasonally', label: 'Seasonally' },
-  { key: 'rarely', label: 'Rarely' },
+  { key: 'weekly', label: 'Weekly', emoji: '🛍️', description: 'I love a frequent refresh' },
+  { key: 'monthly', label: 'Monthly', emoji: '🗓️', description: 'A few new pieces each month' },
+  { key: 'seasonally', label: 'Seasonally', emoji: '🍂', description: 'I update with the seasons' },
+  { key: 'rarely', label: 'Rarely', emoji: '🌙', description: 'Only when I really need to' },
 ];

@@ -26,4 +26,6 @@ export type SelectableOption<TKey extends string> = {
   key: TKey;
   label: string;
   emoji?: string;
+  /** Optional one-line descriptor shown under the label. */
+  description?: string;
 };

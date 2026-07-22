@@ -5,5 +5,4 @@ export { LoadingOverlay } from './LoadingOverlay';
 export { ScreenContainer } from './ScreenContainer';
 export { StyloBrandView } from './StyloBrandView';
 export { StyloSplashScreen } from './StyloSplashScreen';
-export { StyloSplashWrapper } from './StyloSplashWrapper';
 export { TextField } from './TextField';

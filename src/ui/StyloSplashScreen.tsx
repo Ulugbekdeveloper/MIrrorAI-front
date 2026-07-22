@@ -26,9 +26,10 @@ type Props = AssetPreloaderOptions & {
 };
 
 /**
- * The launch splash: shows the branded StyloBrandView while it preloads the
- * onboarding images (and any caller-held gate), then fades out and calls
- * `onFinish`. For the foreground-return splash, see StyloSplashWrapper.
+ * The cold-start splash: shows the branded StyloBrandView while it preloads
+ * the onboarding images (and any caller-held gate), then fades out and calls
+ * `onFinish`. Only shows on a fresh launch — a warm foreground resume keeps
+ * the JS process alive, so this component simply never remounts.
  */
 export function StyloSplashScreen({
   sources,

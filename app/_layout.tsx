@@ -10,7 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { slides } from '@/features/onboarding/slides';
 import { useAuthStore } from '@/stores/authStore';
 import { colors } from '@/theme';
-import { StyloSplashScreen, StyloSplashWrapper } from '@/ui';
+import { StyloSplashScreen } from '@/ui';
 import type { PreloadableSource } from '@/hooks/useAssetPreloader';
 
 // Sets the native window/root-view background (Android especially) so
@@ -58,31 +58,29 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <StatusBar style="light" />
 
-          {/* The wrapper stays mounted so its AppState listener is always
-              live; it overlays the brand screen on every foreground return. */}
-          <StyloSplashWrapper>
-            {showApp ? (
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                  contentStyle: { backgroundColor: colors.bg },
-                  // Matches the (auth) group's transition so onboarding →
-                  // login feels the same as login ↔ register.
-                  animation: 'slide_from_right',
-                  animationDuration: 220,
-                  gestureEnabled: true,
-                }}
-              />
-            ) : (
-              // Plain app-colored backdrop while we read the flag / hydrate on
-              // a returning launch — deliberately no spinner, so returning
-              // users get the UI directly with no extra loader.
-              <View style={styles.backdrop} />
-            )}
-          </StyloSplashWrapper>
+          {showApp ? (
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: colors.bg },
+                // Matches the (auth) group's transition so onboarding →
+                // login feels the same as login ↔ register.
+                animation: 'slide_from_right',
+                animationDuration: 220,
+                gestureEnabled: true,
+              }}
+            />
+          ) : (
+            // Plain app-colored backdrop while auth hydrates — deliberately no
+            // spinner, so there's no extra loader after the splash.
+            <View style={styles.backdrop} />
+          )}
 
-          {/* Cold-start splash: the branded screen, which also preloads the
-              onboarding images and holds its fade-out until auth hydrates. */}
+          {/* Cold-start splash only (app freshly launched / relaunched after
+              being killed). Warm foreground resumes do NOT re-show it — the JS
+              process stays alive, so this component simply doesn't remount.
+              It also preloads the onboarding images and holds its fade-out
+              until auth hydrates. */}
           {!splashFinished ? (
             <StyloSplashScreen
               sources={ONBOARDING_IMAGE_SOURCES}
