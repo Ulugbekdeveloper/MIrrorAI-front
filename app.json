@@ -62,7 +62,8 @@
         {
           "locationWhenInUsePermission": "Mirror AI uses your location to suggest outfits for the weather near you."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "extra": {
       "router": {

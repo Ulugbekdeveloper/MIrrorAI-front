@@ -27,7 +27,7 @@ export {
 export { UsernameStep } from './components/steps/UsernameStep';
 export { WeatherPermissionStep } from './components/steps/WeatherPermissionStep';
 
-export { STYLE_TYPE_OPTIONS } from './styleTypes';
+export { getStyleTypeOptions, STYLE_TYPE_OPTIONS_MAN, STYLE_TYPE_OPTIONS_WOMAN } from './styleTypes';
 export type { StyleTypeKey, StyleTypeOption } from './styleTypes';
 
 export type { StyleProfileAxis } from './styleProfile';

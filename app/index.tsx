@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { secureStorage } from '@/lib/storage';
 import { useAuthStore } from '@/stores/authStore';
@@ -19,23 +19,18 @@ export default function Index() {
 
   if (status === 'authenticated') return <Redirect href="/(app)/home" />;
 
-  if (onboardingSeen === null) {
-    return (
-      <View style={styles.splash}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
-    );
-  }
+  // While the (near-instant) onboardingSeen read resolves, render a plain
+  // app-colored backdrop rather than a spinner — the branded splash already
+  // covered "loading," so a second loader here would just read as a flash.
+  if (onboardingSeen === null) return <View style={styles.backdrop} />;
 
   if (!onboardingSeen) return <Redirect href="/onboarding" />;
   return <Redirect href="/(auth)/login" />;
 }
 
 const styles = StyleSheet.create({
-  splash: {
+  backdrop: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: colors.bg,
   },
 });

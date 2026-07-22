@@ -78,6 +78,7 @@ export default function PersonalizeScreen() {
       case 'style-type':
         return (
           <StyleTypeStep
+            gender={answers.gender}
             selectedStyleType={answers.styleType}
             onSelectStyleType={answers.setStyleType}
           />
