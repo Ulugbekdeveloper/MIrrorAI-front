@@ -124,7 +124,9 @@ export default function PersonalizeScreen() {
       case 'cost-per-wear':
         return <CostPerWearStep />;
       case 'style-profile':
-        return <StyleProfileStep selectedStyleType={answers.styleType} />;
+        return (
+          <StyleProfileStep gender={answers.gender} selectedStyleType={answers.styleType} />
+        );
       case 'trial-offer':
         return <TrialOfferStep />;
       case 'trial-reminder':

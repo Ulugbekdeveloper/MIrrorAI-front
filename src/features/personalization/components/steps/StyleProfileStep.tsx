@@ -2,39 +2,39 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 
-import { colors, overlay, radius, spacing, typography } from '@/theme';
+import { colors, spacing, typography } from '@/theme';
 
-import { StyleRadarChart } from '../StyleRadarChart';
+import { StyleSpeedGauge } from '../StyleSpeedGauge';
 import { buildStyleProfile } from '../../styleProfile';
-import type { StyleTypeKey } from '../../styleTypes';
+import { getStyleTypeOptions, type StyleTypeKey } from '../../styleTypes';
+import type { GenderKey } from '../../types';
 
-const CHECK_SIZE = 64;
+const CHECK_SIZE = 60;
 
 type Props = {
+  gender: GenderKey | null;
   selectedStyleType: StyleTypeKey | null;
 };
 
-export function StyleProfileStep({ selectedStyleType }: Props) {
-  const axes = buildStyleProfile(selectedStyleType);
-  const dominant = axes.reduce((best, axis) => (axis.value > best.value ? axis : best), axes[0]);
+export function StyleProfileStep({ gender, selectedStyleType }: Props) {
+  // The gauge shows the actual style picked in StyleTypeStep — whose options
+  // differ by gender — so resolve the label from the matching option set.
+  const selectedOption = getStyleTypeOptions(gender).find(
+    (option) => option.key === selectedStyleType,
+  );
+  const styleLabel = selectedOption?.label ?? 'Your style';
 
-  // Staggered entrance: the check springs in, then the header eases up.
+  // Match strength = the dominant axis of the derived profile (~0.9+).
+  const axes = buildStyleProfile(selectedStyleType);
+  const matchValue = Math.max(...axes.map((axis) => axis.value));
+
   const checkScale = useRef(new Animated.Value(0)).current;
   const headerAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.sequence([
-      Animated.spring(checkScale, {
-        toValue: 1,
-        friction: 5,
-        tension: 90,
-        useNativeDriver: true,
-      }),
-      Animated.timing(headerAnim, {
-        toValue: 1,
-        duration: 400,
-        useNativeDriver: true,
-      }),
+      Animated.spring(checkScale, { toValue: 1, friction: 5, tension: 90, useNativeDriver: true }),
+      Animated.timing(headerAnim, { toValue: 1, duration: 350, useNativeDriver: true }),
     ]).start();
   }, [checkScale, headerAnim]);
 
@@ -43,34 +43,25 @@ export function StyleProfileStep({ selectedStyleType }: Props) {
   return (
     <View style={styles.content}>
       <Animated.View style={[styles.checkCircle, { transform: [{ scale: checkScale }] }]}>
-        <Ionicons name="checkmark" size={34} color={colors.white} />
+        <Ionicons name="checkmark" size={32} color={colors.white} />
       </Animated.View>
 
       <Animated.View
-        style={[styles.headerText, { opacity: headerAnim, transform: [{ translateY: headerTranslate }] }]}
+        style={[styles.header, { opacity: headerAnim, transform: [{ translateY: headerTranslate }] }]}
       >
-        <Text style={styles.title}>Your style profile is ready</Text>
+        <Text style={styles.title}>You&apos;re a strong match</Text>
         <Text style={styles.subtitle}>
-          This is the aesthetic that makes you, you — we&apos;ll tune every pick to match.
+          We read your picks — here&apos;s how closely you fit your signature look.
         </Text>
       </Animated.View>
 
-      <View style={styles.signature}>
-        <Text style={styles.signatureLabel}>YOUR SIGNATURE STYLE</Text>
-        <Text style={styles.signatureValue}>{dominant.label}</Text>
-      </View>
-
-      {/* Bleeds past the screen's horizontal padding so the chart can use the
-          full device width — keeps every axis label from clipping. */}
-      <View style={styles.chartBleed}>
-        <StyleRadarChart axes={axes} />
-      </View>
+      <StyleSpeedGauge value={matchValue} label={styleLabel} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { alignItems: 'center', gap: spacing.sm },
+  content: { alignItems: 'center', gap: spacing.md },
   checkCircle: {
     width: CHECK_SIZE,
     height: CHECK_SIZE,
@@ -78,52 +69,23 @@ const styles = StyleSheet.create({
     backgroundColor: colors.success,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: spacing.xs,
     shadowColor: colors.success,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.4,
     shadowRadius: 14,
     elevation: 6,
   },
-  headerText: { alignItems: 'center', gap: spacing.xs },
+  header: { alignItems: 'center', gap: spacing.xs, marginBottom: spacing.md },
   title: {
-    ...typography.titleLg,
+    ...typography.displaySm,
     color: colors.text,
     textAlign: 'center',
+    letterSpacing: -0.3,
   },
   subtitle: {
     ...typography.body,
     color: colors.textMuted,
     textAlign: 'center',
     paddingHorizontal: spacing.md,
-  },
-  signature: {
-    alignItems: 'center',
-    gap: 2,
-    marginTop: spacing.md,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.xl,
-    borderRadius: radius.xl,
-    borderWidth: 1,
-    borderColor: overlay.primaryOutline,
-    backgroundColor: overlay.primaryTint,
-  },
-  signatureLabel: {
-    ...typography.caption,
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 1,
-    color: colors.textMuted,
-  },
-  signatureValue: {
-    ...typography.titleLg,
-    color: colors.text,
-    fontWeight: '800',
-  },
-  chartBleed: {
-    marginHorizontal: -spacing.lg,
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    marginTop: spacing.xs,
   },
 });
