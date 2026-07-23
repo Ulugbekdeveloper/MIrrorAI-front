@@ -1,21 +1,9 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import {
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  type TextInputProps,
-} from 'react-native';
-
+import { forwardRef, useImperativeHandle, useRef, useState, type ReactNode} from 'react';
+import { Pressable, StyleSheet, Text, TextInput, View, type TextInputProps} from 'react-native';
 import { colors, finish, overlay, radius, spacing, typography } from '@/theme';
+
+
 
 type Props = TextInputProps & {
   leftIcon?: ReactNode;
@@ -31,8 +19,7 @@ export const TextField = forwardRef<TextInput, Props>(function TextField(
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<TextInput>(null);
 
-  // Expose the internal TextInput ref via the forwarded ref so callers can
-  // still do `emailRef.current?.focus()` from outside.
+  
   useImperativeHandle(ref, () => inputRef.current as TextInput, []);
 
   const focusInput = () => inputRef.current?.focus();

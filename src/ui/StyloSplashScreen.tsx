@@ -1,11 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet } from 'react-native';
-
-import {
-  useAssetPreloader,
-  type AssetPreloaderOptions,
-  type PreloadableSource,
-} from '@/hooks/useAssetPreloader';
+import { useAssetPreloader, type AssetPreloaderOptions, type PreloadableSource} from '@/hooks/useAssetPreloader';
 
 import { StyloBrandView } from './StyloBrandView';
 
