@@ -1,75 +1,69 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
-import { useState } from 'react';
-import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, radius, silver, spacing, typography } from '@/theme';
+import { colors, overlay, radius, silver, spacing, typography } from '@/theme';
 
 import { PhoneMockup } from '../PhoneMockup';
 import { TrialLegalRow } from '../TrialLegalRow';
 
-const TSHIRT_IMAGE = require('@assets/brand/tshirt.webp');
+// Mirrors app/(app)/personalize.tsx so the phone's height budget accounts for
+// chrome it doesn't render: the scroll padding and the footer (Next button +
+// TrialOfferFooterExtras stacked below it).
+const ORCHESTRATOR_CHROME_HEIGHT = 24 + 150;
+// This step's own text around the phone (title, "No payment" row, gaps).
+const STEP_CHROME_HEIGHT = 100;
 
-type PhoneAction = 'confirm' | 'retry';
-
-// Mirrors app/(app)/personalize.tsx's own layout so the phone mockup's
-// height budget accounts for chrome it doesn't render itself: the scroll
-// area's top padding and the footer (Next button + TrialOfferFooterExtras,
-// stacked below it).
-const ORCHESTRATOR_CHROME_HEIGHT = 24 + 154;
-// This step's own text above the phone (title, checkmark line) plus the
-// gaps between every element in `content`.
-const STEP_CHROME_HEIGHT = 120;
+const PRO_FEATURES = ['Unlimited AI try-ons', 'HD outfit previews', 'Priority styling speed'];
 
 export function TrialOfferStep() {
-  const [activeAction, setActiveAction] = useState<PhoneAction | null>(null);
   const { height: windowHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-
   const phoneMaxHeight =
     windowHeight - insets.top - insets.bottom - ORCHESTRATOR_CHROME_HEIGHT - STEP_CHROME_HEIGHT;
 
   return (
     <View style={styles.content}>
-      <Text style={styles.title}>We want you to try Stylo Pro for free</Text>
+      <Text style={styles.title}>Try Stylo Pro, free for 7 days</Text>
 
       <View style={styles.phoneBleed}>
         <PhoneMockup maxHeight={phoneMaxHeight}>
-          <Pressable style={styles.closeButton} hitSlop={8}>
-            <Ionicons name="close" size={16} color={colors.textOnLight} />
-          </Pressable>
-
-          <View style={styles.previewBody}>
-            <Image source={TSHIRT_IMAGE} style={styles.tshirtImage} contentFit="contain" />
-            <Text style={styles.previewCaption}>Tap and hold to see the original image</Text>
-
-            <View style={styles.actionColumn}>
-              <Pressable
-                onPress={() => setActiveAction('confirm')}
-                style={[styles.pillButton, styles.confirmButton, activeAction === 'confirm' && styles.pillPressed]}
-              >
-                <Text style={styles.confirmLabel}>Confirm</Text>
-              </Pressable>
-              <Pressable
-                onPress={() => setActiveAction('retry')}
-                style={[styles.pillButton, styles.retryButton, activeAction === 'retry' && styles.pillPressed]}
-              >
-                <Text style={styles.retryLabel}>Retry</Text>
-              </Pressable>
-            </View>
-
-            <View style={styles.creditsRow}>
-              <Text style={styles.creditsLabel}>944 AI credits</Text>
-              <Ionicons name="add-circle" size={14} color={colors.textOnLight} />
-            </View>
-          </View>
+          <ProPreview />
         </PhoneMockup>
       </View>
 
-      <View style={styles.checkRow}>
-        <Ionicons name="checkmark" size={18} color={colors.text} />
-        <Text style={styles.checkLabel}>No Payment Due Now</Text>
+      <View style={styles.trustRow}>
+        <Ionicons name="checkmark-circle" size={18} color={colors.success} />
+        <Text style={styles.trustText}>No payment due now</Text>
+      </View>
+    </View>
+  );
+}
+
+/** The light "Stylo Pro" upgrade screen rendered inside the phone mockup. */
+function ProPreview() {
+  return (
+    <View style={inside.wrap}>
+      <View style={inside.crown}>
+        <MaterialCommunityIcons name="crown" size={22} color={colors.primary} />
+      </View>
+
+      <Text style={inside.title}>
+        Stylo <Text style={inside.titlePro}>Pro</Text>
+      </Text>
+      <Text style={inside.subtitle}>Everything, unlocked</Text>
+
+      <View style={inside.features}>
+        {PRO_FEATURES.map((feature) => (
+          <View key={feature} style={inside.featureRow}>
+            <Ionicons name="checkmark-circle" size={16} color={colors.success} />
+            <Text style={inside.featureText}>{feature}</Text>
+          </View>
+        ))}
+      </View>
+
+      <View style={inside.badge}>
+        <Text style={inside.badgeText}>7-DAY FREE TRIAL</Text>
       </View>
     </View>
   );
@@ -86,17 +80,13 @@ export function TrialOfferFooterExtras() {
 }
 
 const styles = StyleSheet.create({
-  content: { alignItems: 'center', gap: spacing.sm },
+  content: { alignItems: 'center', gap: spacing.md },
   title: {
     ...typography.titleLg,
     color: colors.text,
     textAlign: 'center',
     letterSpacing: -0.2,
-  },
-  checkRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
-  checkLabel: {
-    ...typography.bodyStrong,
-    color: colors.text,
+    paddingHorizontal: spacing.md,
   },
   phoneBleed: {
     marginHorizontal: -spacing.lg,
@@ -104,78 +94,71 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: spacing.xs,
   },
-  closeButton: {
-    position: 'absolute',
-    top: spacing.sm,
-    right: spacing.sm,
-    zIndex: 3,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: silver[100],
-  },
-  previewBody: {
-    flex: 1,
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.xs,
-  },
-  tshirtImage: { width: '108%', aspectRatio: 1 },
-  previewCaption: {
-    ...typography.caption,
-    fontSize: 10,
-    lineHeight: 14,
-    color: silver[400],
-    textAlign: 'center',
-  },
-  actionColumn: {
-    alignSelf: 'stretch',
-    gap: spacing.xs,
-    marginTop: spacing.xs,
-  },
-  pillButton: {
-    alignSelf: 'center',
-    width: '90%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing.xs,
-    borderRadius: radius.pill,
-  },
-  pillPressed: { opacity: 0.7 },
-  retryButton: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: silver[200],
-  },
-  retryLabel: {
-    ...typography.caption,
-    fontWeight: '700',
-    color: colors.textOnLight,
-  },
-  confirmButton: { backgroundColor: colors.black },
-  confirmLabel: {
-    ...typography.caption,
-    fontWeight: '700',
-    color: colors.white,
-  },
-  creditsRow: {
+  trustRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    marginTop: spacing.xs,
+    gap: spacing.xs,
   },
-  creditsLabel: {
-    ...typography.caption,
-    fontSize: 11,
-    fontWeight: '600',
-    color: colors.textOnLight,
+  trustText: {
+    ...typography.bodyStrong,
+    color: colors.text,
   },
   footerExtras: { alignItems: 'center', gap: spacing.xs },
   footerText: {
     ...typography.bodyStrong,
     color: colors.text,
+  },
+});
+
+// Light-theme styles — this content sits on the phone's white screen.
+const inside = StyleSheet.create({
+  wrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.md,
+    gap: spacing.xs,
+  },
+  crown: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: overlay.primaryTint,
+    marginBottom: spacing.xs,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: colors.textOnLight,
+    letterSpacing: -0.4,
+  },
+  titlePro: { color: colors.primary },
+  subtitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: silver[500],
+    marginBottom: spacing.sm,
+  },
+  features: { alignSelf: 'stretch', gap: spacing.xs, marginBottom: spacing.md },
+  featureRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  featureText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: silver[800],
+    flex: 1,
+  },
+  badge: {
+    paddingVertical: 6,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.pill,
+    backgroundColor: colors.primary,
+  },
+  badgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.6,
+    color: colors.white,
   },
 });

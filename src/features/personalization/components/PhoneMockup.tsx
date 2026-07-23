@@ -17,7 +17,7 @@ const RIM = 3.5;
 /** Black border between the rim and the screen. */
 const BEZEL = 8;
 const CANVAS_SIDE_MARGIN = 24;
-const MAX_PHONE_WIDTH = 310;
+const MAX_PHONE_WIDTH = 340;
 const MIN_PHONE_WIDTH = 150;
 // A true iPhone 15 Pro is ≈2.17 (852x393pt), but since the mockup's height
 // is capped by the page layout, width can only grow by widening the stance —

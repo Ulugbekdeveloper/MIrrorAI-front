@@ -4,6 +4,7 @@ export { isValidUsername } from './lib/username';
 
 export { useBirthdayPicker } from './hooks/useBirthdayPicker';
 export { useLocationPermission } from './hooks/useLocationPermission';
+export { useNotificationPermission } from './hooks/useNotificationPermission';
 export { usePersonalizationAnswers } from './hooks/usePersonalizationAnswers';
 export { usePersonalizationFlow } from './hooks/usePersonalizationFlow';
 export { useStepEntranceAnimation } from './hooks/useStepEntranceAnimation';

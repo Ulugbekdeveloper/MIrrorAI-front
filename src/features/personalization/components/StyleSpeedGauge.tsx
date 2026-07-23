@@ -1,8 +1,9 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import Svg, { Line, Path, Polygon } from 'react-native-svg';
 
-import { colors, overlay, spacing, typography } from '@/theme';
+import { colors, overlay, radius, spacing, typography } from '@/theme';
 
 type Props = {
   /** 0–1 match strength the needle sweeps to. */
@@ -175,13 +176,15 @@ export function StyleSpeedGauge({ value, label }: Props) {
       </View>
 
       <View style={styles.readout}>
+        <Text style={styles.eyebrow}>STYLE MATCH</Text>
         <View style={styles.percentRow}>
           <Text style={styles.percent}>{display}</Text>
           <Text style={styles.percentSign}>%</Text>
         </View>
-        <Text style={styles.matchLabel}>
-          match · <Text style={styles.styleName}>{label}</Text>
-        </Text>
+        <View style={styles.styleChip}>
+          <Ionicons name="sparkles" size={13} color={colors.success} />
+          <Text style={styles.styleChipText}>{label}</Text>
+        </View>
       </View>
     </View>
   );
@@ -212,31 +215,45 @@ const styles = StyleSheet.create({
     borderRadius: (HUB - 10) / 2,
     backgroundColor: colors.primary,
   },
-  readout: { alignItems: 'center', marginTop: -spacing.md },
-  percentRow: { flexDirection: 'row', alignItems: 'flex-start' },
+  readout: { alignItems: 'center', gap: spacing.xxs, marginTop: spacing.sm },
+  eyebrow: {
+    ...typography.caption,
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+    color: colors.textDim,
+  },
+  // Baseline-aligned so the "%" sits on the number's baseline, not floating
+  // as a superscript.
+  percentRow: { flexDirection: 'row', alignItems: 'baseline' },
   percent: {
     ...typography.displayLg,
-    fontSize: 58,
-    lineHeight: 60,
+    fontSize: 60,
+    lineHeight: 64,
     fontWeight: '800',
     color: colors.text,
     fontVariant: ['tabular-nums'],
-    letterSpacing: -1.5,
+    letterSpacing: -2,
   },
   percentSign: {
-    ...typography.titleLg,
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: '700',
     color: colors.textMuted,
-    marginTop: 8,
-    marginLeft: 3,
+    marginLeft: 2,
   },
-  matchLabel: {
-    ...typography.body,
-    color: colors.textMuted,
-    marginTop: spacing.xs,
+  styleChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginTop: spacing.xxs,
+    paddingVertical: 5,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: overlay.successOutline,
+    backgroundColor: overlay.successTint,
   },
-  styleName: {
+  styleChipText: {
     ...typography.bodyStrong,
     color: colors.success,
     fontWeight: '800',

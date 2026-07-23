@@ -22,6 +22,7 @@ import {
   TrialReminderStep,
   UsernameStep,
   useLocationPermission,
+  useNotificationPermission,
   usePersonalizationAnswers,
   usePersonalizationFlow,
   useStepEntranceAnimation,
@@ -41,6 +42,15 @@ export default function PersonalizeScreen() {
   const answers = usePersonalizationAnswers();
   const entrance = useStepEntranceAnimation(flow.step);
   const { requestLocationAccess } = useLocationPermission();
+  const { requestNotificationAccess } = useNotificationPermission();
+
+  // The reminder step's Next asks for OS notification permission (so we can
+  // actually send the trial-ending reminder), then advances regardless of
+  // the user's choice.
+  const handleEnableReminders = async () => {
+    await requestNotificationAccess();
+    flow.goToNextStep();
+  };
 
   const handleTakeSelfie = async () => {
     const image = await captureFromCamera();
@@ -213,7 +223,11 @@ export default function PersonalizeScreen() {
       case 'trial-reminder':
         return (
           <View style={styles.stackedFooter}>
-            <Button label="Next" variant="cta" onPress={flow.goToNextStep} />
+            <Button
+              label="Enable reminders"
+              variant="cta"
+              onPress={() => void handleEnableReminders()}
+            />
             <TrialReminderFooterExtras />
           </View>
         );
