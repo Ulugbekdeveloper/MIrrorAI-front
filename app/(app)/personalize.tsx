@@ -98,7 +98,12 @@ export default function PersonalizeScreen() {
         );
      
       case 'weather-permission':
-        return <WeatherPermissionStep onRequestAccess={() => void requestLocationAccess()} />;
+        return (
+          <WeatherPermissionStep
+            onRequestAccess={() => void requestLocationAccess()}
+            onContinue={flow.goToNextStep}
+          />
+        );
       case 'birthday':
         return (
           <BirthdayStep

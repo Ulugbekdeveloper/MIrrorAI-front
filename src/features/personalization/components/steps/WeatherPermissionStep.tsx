@@ -11,10 +11,12 @@ import {
   View,
 } from 'react-native';
 
-import { colors, overlay, radius, silver, spacing, typography } from '@/theme';
+import { colors, overlay, radius, spacing, typography } from '@/theme';
 
 type Props = {
   onRequestAccess: () => void;
+  /** Advances the flow once a choice is made in the prompt. */
+  onContinue: () => void;
 };
 
 // Continuous, deliberately slow motions (ms per full revolution).
@@ -44,7 +46,7 @@ const ORBIT_ICONS: OrbitIcon[] = [
   { family: 'mci', name: 'weather-windy' },
 ];
 
-export function WeatherPermissionStep({ onRequestAccess }: Props) {
+export function WeatherPermissionStep({ onRequestAccess, onContinue }: Props) {
   const { width: screenWidth } = useWindowDimensions();
   const ringDiameter = Math.min(screenWidth - spacing.xl * 2, 300);
   const stageSize = ringDiameter + CHIP_SIZE;
@@ -55,12 +57,16 @@ export function WeatherPermissionStep({ onRequestAccess }: Props) {
   const globeSpin = useRef(new Animated.Value(0)).current;
   const orbit = useRef(new Animated.Value(0)).current;
 
-  // Priming pattern: the two "Allow" options fire the real OS location
-  // request; "Don't Allow" just dismisses without burning the system prompt.
+  // Priming pattern: the two "Allow" options fire the real OS location request
+  // and then advance automatically; "Don't Allow" just cancels the prompt
+  // without burning the system permission.
   const handleAllow = () => {
     setPromptVisible(false);
     onRequestAccess();
+    onContinue();
   };
+
+  const handleDeny = () => setPromptVisible(false);
 
   useEffect(() => {
     // Both are pure rotate transforms on separate views — native-driver safe.
@@ -191,9 +197,9 @@ export function WeatherPermissionStep({ onRequestAccess }: Props) {
             </Pressable>
             <Pressable
               style={({ pressed }) => [styles.dialogRow, pressed && styles.dialogRowPressed]}
-              onPress={() => setPromptVisible(false)}
+              onPress={handleDeny}
             >
-              <Text style={styles.dialogAction}>Don&apos;t Allow</Text>
+              <Text style={[styles.dialogAction, styles.dialogActionMuted]}>Don&apos;t Allow</Text>
             </Pressable>
           </View>
         </View>
@@ -254,8 +260,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: spacing.md,
   },
-  // iOS-style permission dialog — the app's own priming prompt, stacked rows
-  // separated by hairlines.
+  // The app's own dark-glass permission prompt — stacked rows split by
+  // hairlines, styled to sit on the app's dark background rather than clash
+  // as a bright system-style card.
   scrim: {
     flex: 1,
     backgroundColor: overlay.blackStrong,
@@ -266,8 +273,10 @@ const styles = StyleSheet.create({
   dialog: {
     width: '100%',
     maxWidth: 300,
-    borderRadius: radius.lg,
-    backgroundColor: silver[50],
+    borderRadius: radius.xl,
+    backgroundColor: colors.surfaceElevated,
+    borderWidth: 1,
+    borderColor: overlay.whiteSoft,
     overflow: 'hidden',
   },
   dialogHeader: {
@@ -279,25 +288,26 @@ const styles = StyleSheet.create({
   },
   dialogTitle: {
     ...typography.bodyStrong,
-    color: colors.textOnLight,
+    color: colors.text,
     textAlign: 'center',
   },
   dialogMessage: {
     ...typography.caption,
-    color: silver[500],
+    color: colors.textMuted,
     textAlign: 'center',
   },
   dialogRow: {
-    paddingVertical: spacing.sm,
+    paddingVertical: spacing.md,
     alignItems: 'center',
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: silver[300],
+    borderTopColor: overlay.whiteSoft,
   },
-  dialogRowPressed: { backgroundColor: silver[200] },
+  dialogRowPressed: { backgroundColor: overlay.whiteSoft },
   dialogAction: {
     ...typography.body,
     color: colors.primary,
     textAlign: 'center',
   },
   dialogActionPrimary: { fontWeight: '700' },
+  dialogActionMuted: { color: colors.textMuted },
 });
