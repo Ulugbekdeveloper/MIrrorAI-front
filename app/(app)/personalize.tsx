@@ -52,6 +52,12 @@ export default function PersonalizeScreen() {
     flow.goToNextStep();
   };
 
+  // The weather step's Next fires the real OS location prompt, then advances.
+  const handleEnableWeather = async () => {
+    await requestLocationAccess();
+    flow.goToNextStep();
+  };
+
   const handleTakeSelfie = async () => {
     const image = await captureFromCamera();
     if (image) {
@@ -108,12 +114,7 @@ export default function PersonalizeScreen() {
         );
      
       case 'weather-permission':
-        return (
-          <WeatherPermissionStep
-            onRequestAccess={() => void requestLocationAccess()}
-            onContinue={flow.goToNextStep}
-          />
-        );
+        return <WeatherPermissionStep />;
       case 'birthday':
         return (
           <BirthdayStep
@@ -143,7 +144,11 @@ export default function PersonalizeScreen() {
         return <TrialReminderStep />;
       case 'choose-plan':
         return (
-          <ChoosePlanStep selectedPlan={answers.selectedPlan} onSelectPlan={answers.setSelectedPlan} />
+          <ChoosePlanStep
+            selectedPlan={answers.selectedPlan}
+            onSelectPlan={answers.setSelectedPlan}
+            onClose={() => void flow.finishPersonalization()}
+          />
         );
     }
   };
@@ -178,7 +183,7 @@ export default function PersonalizeScreen() {
       case 'weather-permission':
         return (
           <View style={styles.stackedFooter}>
-            <Button label="Next" variant="cta" onPress={flow.goToNextStep} />
+            <Button label="Next" variant="cta" onPress={() => void handleEnableWeather()} />
             <SkipButton onPress={flow.goToNextStep} />
           </View>
         );
@@ -273,7 +278,9 @@ export default function PersonalizeScreen() {
 const styles = StyleSheet.create({
   stepContainer: { flex: 1 },
   scrollArea: { flex: 1 },
-  scrollContent: { gap: spacing.xl, paddingTop: spacing.lg },
+  // flexGrow lets a step that wants to (e.g. choose-plan) push content toward
+  // the footer via a flex spacer; top-aligned steps are unaffected.
+  scrollContent: { flexGrow: 1, gap: spacing.xl, paddingTop: spacing.lg },
   footer: { paddingTop: spacing.lg, paddingBottom: spacing.md },
   stackedFooter: { gap: spacing.xs },
 });

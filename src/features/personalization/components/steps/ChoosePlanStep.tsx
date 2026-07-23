@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, Switch, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { colors, overlay, radius, spacing, typography } from '@/theme';
 
@@ -14,9 +14,11 @@ const FADE_DURATION_MS = 250;
 type Props = {
   selectedPlan: PlanKey;
   onSelectPlan: (plan: PlanKey) => void;
+  /** Dismisses the paywall — proceeds without picking a plan. */
+  onClose: () => void;
 };
 
-export function ChoosePlanStep({ selectedPlan, onSelectPlan }: Props) {
+export function ChoosePlanStep({ selectedPlan, onSelectPlan, onClose }: Props) {
   const [trialEnabled, setTrialEnabled] = useState(true);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const fade = useRef(new Animated.Value(1)).current;
@@ -44,6 +46,10 @@ export function ChoosePlanStep({ selectedPlan, onSelectPlan }: Props) {
 
   return (
     <View style={styles.content}>
+      <Pressable onPress={onClose} hitSlop={10} style={styles.closeButton}>
+        <Ionicons name="close" size={20} color={colors.textMuted} />
+      </Pressable>
+
       <Text style={styles.title}>Choose your plan</Text>
 
       <Animated.View style={[styles.testimonial, { opacity: fade }]}>
@@ -55,6 +61,10 @@ export function ChoosePlanStep({ selectedPlan, onSelectPlan }: Props) {
         <Text style={styles.quote}>&ldquo;{testimonial.quote}&rdquo;</Text>
         <Text style={styles.author}>@{testimonial.author}</Text>
       </Animated.View>
+
+      {/* Flexible gap pushes the toggle + plans down toward the Continue
+          button (relies on the scroll container's flexGrow). */}
+      <View style={styles.spacer} />
 
       <View style={styles.trialRow}>
         <Text style={styles.trialLabel}>Not sure yet? Start with a free trial.</Text>
@@ -91,12 +101,26 @@ export function ChoosePlanFooterExtras() {
 }
 
 const styles = StyleSheet.create({
-  content: { gap: spacing.lg },
+  content: { flex: 1, gap: spacing.lg },
+  closeButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    zIndex: 2,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: overlay.whiteSoft,
+  },
+  spacer: { flex: 1, minHeight: spacing.md },
   title: {
     ...typography.displaySm,
     color: colors.text,
     textAlign: 'center',
     letterSpacing: -0.3,
+    marginTop: spacing.md,
   },
   testimonial: { alignItems: 'center', gap: spacing.xs },
   starRow: { flexDirection: 'row', gap: 2 },
