@@ -22,6 +22,9 @@ export const authApi = {
 
   me: () => http.get<{ user: User }>('/auth/me'),
 
+  /** Permanently deletes the signed-in user's account and all their data. */
+  deleteAccount: () => http.delete<void>('/auth/account'),
+
   forgotPassword: (body: { email: string }) =>
     http.post<{ message: string }>('/auth/forgot-password', body, { skipAuth: true }),
 

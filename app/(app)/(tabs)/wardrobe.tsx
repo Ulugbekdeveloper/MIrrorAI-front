@@ -8,7 +8,7 @@ import type { TryOnJob } from '@/api';
 import { colors, radius, spacing, typography } from '@/theme';
 import { Button, ScreenContainer } from '@/ui';
 
-export default function HistoryScreen() {
+export default function WardrobeScreen() {
   const router = useRouter();
   const { data, isLoading, isRefetching, refetch } = useQuery({
     queryKey: ['tryOn', 'list'],
@@ -18,10 +18,10 @@ export default function HistoryScreen() {
   const items = data?.items ?? [];
 
   return (
-    <ScreenContainer>
+    <ScreenContainer edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.title}>Your try-ons</Text>
-        <Text style={styles.body}>Everything you&apos;ve generated.</Text>
+        <Text style={styles.title}>Your Wardrobe</Text>
+        <Text style={styles.body}>Every look you&apos;ve tried on, in one place.</Text>
       </View>
 
       <FlatList
@@ -30,26 +30,28 @@ export default function HistoryScreen() {
         numColumns={2}
         columnWrapperStyle={styles.row}
         contentContainerStyle={items.length ? styles.list : styles.emptyList}
+        showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl
-            refreshing={isRefetching}
-            onRefresh={refetch}
-            tintColor={colors.primary}
-          />
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />
         }
-        renderItem={({ item }) => <HistoryItem item={item} onPress={() =>
-          router.push({ pathname: '/(app)/try-on/result', params: { jobId: item.jobId } })
-        } />}
+        renderItem={({ item }) => (
+          <WardrobeItem
+            item={item}
+            onPress={() =>
+              router.push({ pathname: '/(app)/try-on/result', params: { jobId: item.jobId } })
+            }
+          />
+        )}
         ListEmptyComponent={
           isLoading ? null : (
             <View style={styles.empty}>
-              <Text style={styles.emptyTitle}>Nothing yet</Text>
+              <Text style={styles.emptyTitle}>Your wardrobe is empty</Text>
               <Text style={styles.emptyBody}>
-                Your try-on results will show up here.
+                Tap the ✦ button below to try on your first look.
               </Text>
               <Button
                 label="Start a try-on"
-                onPress={() => router.push('/(app)/try-on/pick-person')}
+                onPress={() => router.push('/(app)/try-on/studio')}
               />
             </View>
           )
@@ -59,7 +61,7 @@ export default function HistoryScreen() {
   );
 }
 
-function HistoryItem({ item, onPress }: { item: TryOnJob; onPress: () => void }) {
+function WardrobeItem({ item, onPress }: { item: TryOnJob; onPress: () => void }) {
   const uri = item.resultUrl;
   return (
     <Pressable onPress={onPress} style={styles.tile}>
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
   header: { paddingTop: spacing.md, paddingBottom: spacing.md, gap: spacing.xxs },
   title: { ...typography.displaySm, color: colors.text },
   body: { ...typography.body, color: colors.textMuted },
-  list: { paddingBottom: spacing.xl, gap: spacing.sm },
+  list: { paddingBottom: spacing.xxl, gap: spacing.sm },
   emptyList: { flex: 1, justifyContent: 'center' },
   row: { gap: spacing.sm },
   tile: {

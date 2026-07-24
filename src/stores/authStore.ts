@@ -25,6 +25,8 @@ type AuthState = {
     fullName?: AppleFullName;
   }) => Promise<void>;
   logout: () => Promise<void>;
+  /** Deletes the account server-side, then clears the device like a logout. */
+  deleteAccount: () => Promise<void>;
   completePersonalization: () => Promise<void>;
 
   /** Internal — used by the http client via the auth bridge. */
@@ -151,6 +153,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       user: null,
       accessToken: null,
       refreshToken: null,
+    });
+  },
+
+  deleteAccount: async () => {
+    // Server-authoritative: only clear the device once the account is actually
+    // deleted. If the request fails, this throws and the caller keeps the user
+    // signed in so they can retry.
+    await authApi.deleteAccount();
+    await Promise.all([secureStorage.clear(), secureStorage.remove('personalizationSeen')]);
+    set({
+      status: 'unauthenticated',
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      personalizationSeen: false,
     });
   },
 
