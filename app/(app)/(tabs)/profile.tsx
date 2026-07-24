@@ -1,10 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { AccountSheet } from '@/features/navigation/AccountSheet';
 import { secureStorage } from '@/lib/storage';
 import { useAuthStore } from '@/stores/authStore';
 import { colors, overlay, radius, spacing, typography } from '@/theme';
-import { Button, ScreenContainer } from '@/ui';
+import { ScreenContainer } from '@/ui';
 
 const ROWS: { icon: keyof typeof Ionicons.glyphMap; label: string }[] = [
   { icon: 'sparkles-outline', label: 'Style preferences' },
@@ -17,6 +19,7 @@ export default function ProfileScreen() {
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const deleteAccount = useAuthStore((s) => s.deleteAccount);
+  const [accountSheetVisible, setAccountSheetVisible] = useState(false);
 
   const initial = (user?.displayName ?? user?.email ?? 'S').charAt(0).toUpperCase();
 
@@ -67,14 +70,10 @@ export default function ProfileScreen() {
       {/* Settings */}
       <Text style={styles.sectionLabel}>SETTINGS</Text>
       <View style={styles.rowsCard}>
-        {ROWS.map((row, index) => (
+        {ROWS.map((row) => (
           <Pressable
             key={row.label}
-            style={({ pressed }) => [
-              styles.row,
-              index < ROWS.length - 1 && styles.rowDivider,
-              pressed && styles.rowPressed,
-            ]}
+            style={({ pressed }) => [styles.row, styles.rowDivider, pressed && styles.rowPressed]}
           >
             <View style={styles.rowIcon}>
               <Ionicons name={row.icon} size={18} color={colors.text} />
@@ -83,29 +82,40 @@ export default function ProfileScreen() {
             <Ionicons name="chevron-forward" size={18} color={colors.textDim} />
           </Pressable>
         ))}
-      </View>
 
-      <View style={styles.footer}>
-        <Button label="Logout" variant="secondary" onPress={() => void logout()} />
-        <Pressable onPress={confirmDeleteAccount} hitSlop={8} style={styles.deleteButton}>
-          <Ionicons name="trash-outline" size={16} color={colors.danger} />
-          <Text style={styles.deleteText}>Delete account</Text>
+        {/* Opens the Account drawer (Logout / Delete account). */}
+        <Pressable
+          style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+          onPress={() => setAccountSheetVisible(true)}
+        >
+          <View style={styles.rowIcon}>
+            <Ionicons name="person-circle-outline" size={18} color={colors.text} />
+          </View>
+          <Text style={styles.rowLabel}>Account</Text>
+          <Ionicons name="chevron-forward" size={18} color={colors.textDim} />
         </Pressable>
-
-        {/* DEV ONLY — replay the personalize questions without logging out.
-            Flipping the flag triggers (app)/_layout.tsx's own redirect guard. */}
-        {__DEV__ ? (
-          <Pressable
-            style={styles.devReplay}
-            onPress={() => {
-              void secureStorage.remove('personalizationSeen');
-              useAuthStore.setState({ personalizationSeen: false });
-            }}
-          >
-            <Text style={styles.devReplayText}>[dev] Replay personalize questions</Text>
-          </Pressable>
-        ) : null}
       </View>
+
+      {/* DEV ONLY — replay the personalize questions without logging out.
+          Flipping the flag triggers (app)/_layout.tsx's own redirect guard. */}
+      {__DEV__ ? (
+        <Pressable
+          style={styles.devReplay}
+          onPress={() => {
+            void secureStorage.remove('personalizationSeen');
+            useAuthStore.setState({ personalizationSeen: false });
+          }}
+        >
+          <Text style={styles.devReplayText}>[dev] Replay personalize questions</Text>
+        </Pressable>
+      ) : null}
+
+      <AccountSheet
+        visible={accountSheetVisible}
+        onClose={() => setAccountSheetVisible(false)}
+        onLogout={() => void logout()}
+        onDeleteAccount={confirmDeleteAccount}
+      />
     </ScreenContainer>
   );
 }
@@ -179,18 +189,6 @@ const styles = StyleSheet.create({
     backgroundColor: overlay.whiteSoft,
   },
   rowLabel: { ...typography.bodyStrong, color: colors.text, flex: 1 },
-  footer: { flex: 1, justifyContent: 'flex-end', gap: spacing.sm, paddingBottom: spacing.md },
-  deleteButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.xs,
-    paddingVertical: spacing.sm,
-  },
-  deleteText: {
-    ...typography.bodyStrong,
-    color: colors.danger,
-  },
-  devReplay: { alignItems: 'center', paddingVertical: spacing.xs },
+  devReplay: { alignItems: 'center', paddingVertical: spacing.md, marginTop: 'auto' },
   devReplayText: { ...typography.caption, color: colors.textDim },
 });

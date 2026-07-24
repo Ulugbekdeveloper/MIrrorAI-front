@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
@@ -75,22 +76,24 @@ export function TrialReminderStep() {
         </Animated.View>
       </View>
 
-      {/* A preview of the reminder they'll actually receive — a black
-          notification banner. */}
+      {/* A preview of the reminder they'll actually receive — a real iOS-style
+          frosted notification banner. */}
       <Animated.View
-        style={[styles.notif, { opacity: notif, transform: [{ translateY: notifTranslate }] }]}
+        style={[styles.notifShadow, { opacity: notif, transform: [{ translateY: notifTranslate }] }]}
       >
-        <View style={styles.notifIcon}>
-          <Ionicons name="notifications" size={18} color={colors.black} />
-        </View>
-        <View style={styles.notifBody}>
-          <View style={styles.notifHead}>
-            <Text style={styles.notifApp}>STYLO</Text>
-            <Text style={styles.notifTime}>now</Text>
+        <BlurView intensity={65} tint="systemThickMaterialLight" style={styles.notif}>
+          <View style={styles.notifIcon}>
+            <Ionicons name="notifications" size={22} color={colors.white} />
           </View>
-          <Text style={styles.notifTitle}>Your free trial ends in 2 days</Text>
-          <Text style={styles.notifText}>Cancel anytime before then — no charge.</Text>
-        </View>
+          <View style={styles.notifBody}>
+            <View style={styles.notifHead}>
+              <Text style={styles.notifApp}>Stylo</Text>
+              <Text style={styles.notifTime}>now</Text>
+            </View>
+            <Text style={styles.notifTitle}>Your free trial ends in 2 days</Text>
+            <Text style={styles.notifText}>Cancel anytime before then — no charge.</Text>
+          </View>
+        </BlurView>
       </Animated.View>
 
       <View style={styles.trustRow}>
@@ -184,41 +187,50 @@ const styles = StyleSheet.create({
   },
   // Shadow lives on the wrapper — the BlurView clips to its rounded corners
   // (overflow: hidden), which would otherwise cut the shadow off.
-  notif: {
+  notifShadow: {
     alignSelf: 'stretch',
+    borderRadius: radius.xl,
+  },
+  notif: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: spacing.sm,
     padding: spacing.md,
     borderRadius: radius.xl,
-    backgroundColor: colors.black,
+    borderWidth: 1,
+    borderColor: overlay.whiteMedium,
+    overflow: 'hidden',
+    // Faint lift so the card reads as distinct even where the native blur is
+    // weak (e.g. some Android devices).
+    backgroundColor: overlay.whiteSoft,
   },
   notifIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 11, // iOS app-icon squircle
+    width: 42,
+    height: 42,
+    borderRadius: 12, // iOS app-icon squircle
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.white,
+    backgroundColor: colors.primary,
   },
   notifBody: { flex: 1, gap: 2 },
   notifHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   notifApp: {
     ...typography.caption,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '700',
-    letterSpacing: 0.8,
-    color: overlay.whiteBody,
+    letterSpacing: 0.2,
+    color: colors.text,
   },
   notifTime: { ...typography.caption, fontSize: 11, color: colors.textDim },
   notifTitle: {
     ...typography.bodyStrong,
     fontSize: 15,
-    color: colors.white,
+    color: colors.text,
   },
   notifText: {
     ...typography.caption,
     fontSize: 13,
-    color: overlay.whiteBody,
+    color: colors.textMuted,
   },
   trustRow: {
     flexDirection: 'row',

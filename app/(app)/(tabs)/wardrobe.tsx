@@ -1,7 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import { tryOnApi } from '@/api';
 import type { TryOnJob } from '@/api';
@@ -24,39 +33,59 @@ export default function WardrobeScreen() {
         <Text style={styles.body}>Every look you&apos;ve tried on, in one place.</Text>
       </View>
 
-      <FlatList
-        data={items}
-        keyExtractor={(item) => item.jobId}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-        contentContainerStyle={items.length ? styles.list : styles.emptyList}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />
-        }
-        renderItem={({ item }) => (
-          <WardrobeItem
-            item={item}
-            onPress={() =>
-              router.push({ pathname: '/(app)/try-on/result', params: { jobId: item.jobId } })
-            }
-          />
-        )}
-        ListEmptyComponent={
-          isLoading ? null : (
-            <View style={styles.empty}>
-              <Text style={styles.emptyTitle}>Your wardrobe is empty</Text>
-              <Text style={styles.emptyBody}>
-                Tap the ✦ button below to try on your first look.
-              </Text>
-              <Button
-                label="Start a try-on"
-                onPress={() => router.push('/(app)/try-on/studio')}
-              />
-            </View>
-          )
-        }
-      />
+      {/* Rendered as two separate components (not one FlatList with
+          ListEmptyComponent) because RN's FlatList has a known bug where an
+          empty dataset + numColumns fails to render ListEmptyComponent on the
+          very first paint — it only shows up after a later re-render (e.g.
+          switching tabs and back). Splitting sidesteps that entirely. */}
+      {items.length > 0 ? (
+        <FlatList
+          style={styles.listOuter}
+          data={items}
+          keyExtractor={(item) => item.jobId}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />
+          }
+          renderItem={({ item }) => (
+            <WardrobeItem
+              item={item}
+              onPress={() =>
+                router.push({ pathname: '/(app)/try-on/result', params: { jobId: item.jobId } })
+              }
+            />
+          )}
+        />
+      ) : isLoading ? (
+        // The very first fetch (no cache yet, e.g. right after finishing
+        // personalization) can take a moment — show a spinner instead of a
+        // blank white screen while it's in flight.
+        <View style={styles.loading}>
+          <ActivityIndicator size="small" color={colors.black} />
+        </View>
+      ) : (
+        <ScrollView
+          style={styles.listOuter}
+          contentContainerStyle={styles.emptyList}
+          refreshControl={
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />
+          }
+        >
+          <View style={styles.empty}>
+            <Text style={styles.emptyTitle}>Your wardrobe is empty</Text>
+            <Text style={styles.emptyBody}>
+              Tap the ✦ button below to try on your first look.
+            </Text>
+            <Button
+              label="Start a try-on"
+              onPress={() => router.push('/(app)/try-on/studio')}
+            />
+          </View>
+        </ScrollView>
+      )}
     </ScreenContainer>
   );
 }
@@ -82,8 +111,13 @@ const styles = StyleSheet.create({
   header: { paddingTop: spacing.md, paddingBottom: spacing.md, gap: spacing.xxs },
   title: { ...typography.displaySm, color: colors.text },
   body: { ...typography.body, color: colors.textMuted },
+  listOuter: { flex: 1 },
+  loading: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   list: { paddingBottom: spacing.xxl, gap: spacing.sm },
-  emptyList: { flex: 1, justifyContent: 'center' },
+  // flexGrow (not flex) on a ScrollView's contentContainerStyle — this needs
+  // to grow to fill the ScrollView's own bounded height so `justifyContent:
+  // 'center'` actually centers the empty state instead of collapsing to 0.
+  emptyList: { flexGrow: 1, justifyContent: 'center' },
   row: { gap: spacing.sm },
   tile: {
     flex: 1,
