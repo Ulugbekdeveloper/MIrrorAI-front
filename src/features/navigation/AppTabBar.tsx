@@ -37,7 +37,7 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
 
   return (
     <View style={styles.wrap}>
-      <BlurView intensity={40} tint="systemThickMaterialDark" style={styles.bar}>
+      <BlurView intensity={40} tint="systemThickMaterialLight" style={styles.bar}>
         <View style={[styles.barInner, { paddingBottom: (insets.bottom || spacing.sm) + spacing.xs }]}>
           <TabButton
             family="mci"
@@ -63,7 +63,7 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
         <View style={styles.bump}>
           <BlurView
             intensity={40}
-            tint="systemThickMaterialDark"
+            tint="systemThickMaterialLight"
             style={StyleSheet.absoluteFill}
           />
         </View>
@@ -73,12 +73,12 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
       <View style={styles.centerSlot} pointerEvents="box-none">
         <Pressable onPress={startTryOn} style={({ pressed }) => [pressed && styles.centerPressed]}>
           <LinearGradient
-            colors={[colors.white, silver[100], silver[300]]}
+            colors={[silver[800], silver[950], colors.black]}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
             style={styles.centerButton}
           >
-            <Ionicons name="sparkles" size={26} color={colors.textOnLight} />
+            <Ionicons name="sparkles" size={26} color={colors.white} />
           </LinearGradient>
           <Text style={styles.centerLabel}>Try On</Text>
         </Pressable>
@@ -185,11 +185,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 3,
     borderColor: colors.bg,
-    shadowColor: colors.white,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 10,
   },
   centerLabel: {
     ...typography.caption,

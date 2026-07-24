@@ -101,11 +101,6 @@ function Battery() {
 
 const styles = StyleSheet.create({
   shadowWrap: {
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.5,
-    shadowRadius: 24,
-    elevation: 12,
   },
   rim: { flex: 1 },
   frame: {

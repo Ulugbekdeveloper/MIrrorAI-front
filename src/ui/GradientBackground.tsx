@@ -26,10 +26,10 @@ export function GradientBackground() {
           r="1.35"
           gradientUnits="objectBoundingBox"
         >
-          <Stop offset="0" stopColor={silver[800]} />
-          <Stop offset="0.22" stopColor={silver[900]} />
-          <Stop offset="0.5" stopColor={silver[950]} />
-          <Stop offset="1" stopColor={silver[950]} />
+          <Stop offset="0" stopColor={silver[100]} />
+          <Stop offset="0.28" stopColor={silver[50]} />
+          <Stop offset="0.6" stopColor={colors.white} />
+          <Stop offset="1" stopColor={colors.white} />
         </RadialGradient>
 
         <LinearGradient
@@ -38,9 +38,8 @@ export function GradientBackground() {
           x2="0" y2="1"
           gradientUnits="objectBoundingBox"
         >
-          <Stop offset="0" stopColor={silver[500]} stopOpacity="0.35" />
-          <Stop offset="0.08" stopColor={silver[600]} stopOpacity="0.14" />
-          <Stop offset="0.16" stopColor={silver[700]} stopOpacity="0" />
+          <Stop offset="0" stopColor={colors.white} stopOpacity="0.7" />
+          <Stop offset="0.12" stopColor={colors.white} stopOpacity="0" />
         </LinearGradient>
 
         <LinearGradient
@@ -49,10 +48,9 @@ export function GradientBackground() {
           x2="0" y2="1"
           gradientUnits="objectBoundingBox"
         >
-          <Stop offset="0" stopColor={colors.black} stopOpacity="0" />
-          <Stop offset="0.55" stopColor={colors.black} stopOpacity="0" />
-          <Stop offset="0.8" stopColor={colors.black} stopOpacity="0.55" />
-          <Stop offset="1" stopColor={colors.black} stopOpacity="0.85" />
+          <Stop offset="0" stopColor={silver[200]} stopOpacity="0" />
+          <Stop offset="0.7" stopColor={silver[200]} stopOpacity="0" />
+          <Stop offset="1" stopColor={silver[200]} stopOpacity="0.35" />
         </LinearGradient>
       </Defs>
       <Rect x="0" y="0" width="100%" height="100%" fill="url(#mirrorBg)" />

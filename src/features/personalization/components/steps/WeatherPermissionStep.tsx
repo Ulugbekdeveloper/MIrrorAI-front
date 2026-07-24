@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   content: { flex: 1, alignItems: 'center', gap: spacing.lg },
   headline: {
     ...typography.displaySm,
-    color: colors.white,
+    color: colors.text,
     textAlign: 'center',
     letterSpacing: -0.3,
     paddingHorizontal: spacing.md,

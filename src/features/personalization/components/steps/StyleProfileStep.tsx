@@ -69,11 +69,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.success,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: colors.success,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 14,
-    elevation: 6,
   },
   header: { alignItems: 'center', gap: spacing.xs, marginBottom: spacing.md },
   title: {

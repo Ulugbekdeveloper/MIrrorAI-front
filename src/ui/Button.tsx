@@ -4,7 +4,7 @@ import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 
 import { colors, overlay, radius, silver, spacing, typography } from '@/theme';
 
-type Variant = 'cta' | 'primary' | 'secondary' | 'ghost' | 'danger';
+type Variant = 'cta' | 'primary' | 'secondary' | 'ghost' | 'danger' | 'light';
 type Size = 'md' | 'lg';
 
 type Props = Omit<PressableProps, 'style' | 'children'> & {
@@ -51,10 +51,9 @@ function MetalCTA({
       ]}
     >
       <LinearGradient
-        // Brightest step of the shared silver ladder — pure white top,
-        // fading through silver-50/100/200 toward the bottom edge.
-        colors={[colors.white, silver[50], silver[100], silver[200]]}
-        locations={[0, 0.32, 0.72, 1]}
+        // Black CTA — a near-black gradient for a touch of depth.
+        colors={[silver[800], silver[950], colors.black]}
+        locations={[0, 0.6, 1]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
         style={ctaStyles.gradient}
@@ -62,7 +61,7 @@ function MetalCTA({
         {/* Fine top sheen — polished metal edge */}
         <View pointerEvents="none" style={ctaStyles.topSheen} />
         {loading ? (
-          <ActivityIndicator color={colors.textOnLight} />
+          <ActivityIndicator color={colors.white} />
         ) : (
           <View style={plainStyles.row}>
             {leadingIcon ? <View style={plainStyles.icon}>{leadingIcon}</View> : null}
@@ -117,15 +116,8 @@ function PlainButton({
 const ctaStyles = StyleSheet.create({
   shadow: {
     borderRadius: radius.pill,
-    // Dark drop-shadow — makes the light pill pop forward off the dark bg.
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.45,
-    shadowRadius: 14,
-    elevation: 8,
   },
   pressedShadow: {
-    shadowOpacity: 0.25,
     transform: [{ scale: 0.985 }],
   },
   gradient: {
@@ -146,7 +138,7 @@ const ctaStyles = StyleSheet.create({
     borderRadius: 1,
   },
   label: {
-    color: colors.textOnLight,
+    color: colors.white,
     fontWeight: '700',
     fontSize: 17,
     letterSpacing: 0.2,
@@ -157,10 +149,11 @@ const plainStyles = StyleSheet.create({
   base: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: radius.md,
+    borderRadius: radius.pill,
   },
   fullWidth: { alignSelf: 'stretch' },
-  disabled: { opacity: 0.5 },
+  // Kept fairly opaque so a disabled black button still reads as dark, not grey.
+  disabled: { opacity: 0.7 },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   icon: { marginRight: 4 },
 });
@@ -172,9 +165,9 @@ const plainSizes = {
 
 const plainVariants = {
   primary: {
-    container: { backgroundColor: colors.primary },
-    pressed: { backgroundColor: colors.primaryPressed },
-    label: { color: colors.primaryText },
+    container: { backgroundColor: colors.black },
+    pressed: { backgroundColor: silver[800] },
+    label: { color: colors.white },
   },
   secondary: {
     container: {
@@ -194,5 +187,11 @@ const plainVariants = {
     container: { backgroundColor: colors.danger },
     pressed: { backgroundColor: colors.dangerPressed },
     label: { color: colors.primaryText },
+  },
+  // White pill — for use on dark imagery (e.g. onboarding over photos).
+  light: {
+    container: { backgroundColor: colors.white },
+    pressed: { backgroundColor: silver[100] },
+    label: { color: colors.textOnLight },
   },
 } as const;

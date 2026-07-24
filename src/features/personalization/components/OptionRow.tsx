@@ -25,7 +25,7 @@ export function OptionRow<TKey extends string>({ option, selected, onPress }: Pr
           <Text style={styles.description}>{option.description}</Text>
         ) : null}
       </View>
-      {selected ? <Ionicons name="checkmark-circle" size={22} color={colors.white} /> : null}
+      {selected ? <Ionicons name="checkmark-circle" size={22} color={colors.text} /> : null}
     </Pressable>
   );
 }

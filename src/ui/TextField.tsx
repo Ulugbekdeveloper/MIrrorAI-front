@@ -51,8 +51,8 @@ export const TextField = forwardRef<TextInput, Props>(function TextField(
           {leftIcon ? <View style={styles.leftIconWrap}>{leftIcon}</View> : null}
           <TextInput
             ref={inputRef}
-            placeholderTextColor={overlay.silverPlaceholder}
-            selectionColor={overlay.whiteBright}
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.black}
             {...rest}
             onFocus={(e) => {
               setFocused(true);
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   pillFocused: {
-    borderColor: finish.borderFocus,
+    borderColor: colors.black,
     borderWidth: 1.5,
   },
   pillError: { borderColor: overlay.dangerBorder },

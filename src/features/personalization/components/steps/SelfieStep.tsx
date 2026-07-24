@@ -145,10 +145,6 @@ const styles = StyleSheet.create({
     height: 2,
     borderRadius: 2,
     backgroundColor: colors.primary,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 8,
   },
   bracket: {
     position: 'absolute',

@@ -73,11 +73,6 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     borderWidth: 1.5,
     borderColor: overlay.whiteBright,
-    shadowColor: colors.white,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    elevation: 4,
   },
   label: {
     ...typography.caption,

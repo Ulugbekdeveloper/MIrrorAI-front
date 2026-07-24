@@ -159,7 +159,7 @@ export default function OnboardingScreen() {
 
           <Button
             label={isLast ? 'Get Started' : 'Next'}
-            variant="cta"
+            variant="light"
             onPress={handleNext}
           />
         </View>

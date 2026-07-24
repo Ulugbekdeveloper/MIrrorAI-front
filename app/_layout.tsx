@@ -56,7 +56,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
-          <StatusBar style="light" />
+          {/* Dark status-bar icons for the light theme. The black splash sets
+              its own `style="light"` while it's up. */}
+          <StatusBar style="dark" />
 
           {showApp ? (
             <Stack

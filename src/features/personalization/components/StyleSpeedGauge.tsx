@@ -165,7 +165,7 @@ export function StyleSpeedGauge({ value, label }: Props) {
             height={needleLen + NEEDLE_TAIL}
             style={{ position: 'absolute', left: needleLen - mid, top: 0 }}
           >
-            <Polygon points={needlePoints} fill={colors.white} />
+            <Polygon points={needlePoints} fill={colors.text} />
           </Svg>
         </Animated.View>
 
@@ -200,14 +200,9 @@ const styles = StyleSheet.create({
     width: HUB,
     height: HUB,
     borderRadius: HUB / 2,
-    backgroundColor: colors.white,
+    backgroundColor: colors.text,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.9,
-    shadowRadius: 10,
-    elevation: 6,
   },
   hubInner: {
     width: HUB - 10,

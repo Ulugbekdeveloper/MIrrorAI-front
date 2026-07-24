@@ -31,11 +31,6 @@ export function DarkGradientButton({ label, onPress }: Props) {
 const styles = StyleSheet.create({
   shadow: {
     borderRadius: radius.pill,
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 5,
   },
   pressed: { transform: [{ scale: 0.985 }] },
   gradient: {
@@ -58,7 +53,7 @@ const styles = StyleSheet.create({
   },
   label: {
     ...typography.button,
-    color: colors.text,
+    color: colors.white,
     fontWeight: '700',
     fontSize: 17,
   },

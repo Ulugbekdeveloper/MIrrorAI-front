@@ -12,15 +12,11 @@ function withAlpha(hex: string, opacity: number): string {
 }
 
 /**
- * Silver tonal scale — the app's core visual system.
- * Every gradient (bg, fields, CTA) picks from this ladder, so shifting a
- * stop here shifts the whole page in lockstep.
- *
- * Each step is cool-leaning (R < G < B) so surfaces never read as cream
- * against the dark background — they stay in the "brushed steel" family.
+ * Silver tonal scale — a neutral cool-gray ladder shared across gradients
+ * and surfaces. 50 = near-white, 950 = near-black.
  */
 export const silver = {
-  50: '#F5F7FA', // near-white, cool
+  50: '#F5F7FA',
   100: '#E7EBF0',
   200: '#CDD3DB',
   300: '#A7AEB8',
@@ -30,101 +26,102 @@ export const silver = {
   700: '#2A2E37',
   800: '#1D2028',
   900: '#12141A',
-  950: '#08090C', // deepest edge
+  950: '#08090C',
 } as const;
 
 const WHITE = '#FFFFFF';
 const BLACK = '#000000';
-const DANGER = '#FF5A5F';
-const SUCCESS = '#3ECF8E';
+const DANGER = '#E5484D';
+const SUCCESS = '#2E9E63';
 const PRIMARY = '#7C5CFF';
 
 /**
- * Every translucent white/black/silver/danger overlay used anywhere in
- * the app, as one flat, deliberately short ladder. If a new screen needs
- * "a faint white line" or "a dark glass fill," reach for one of these
- * before typing a new `rgba(...)` — that's the whole point: one place to
- * retune the app's entire "glass" feel instead of hunting through files.
+ * Every translucent overlay used across the app, as one short ladder.
+ *
+ * The app is a LIGHT theme, so the generic `white*` surface tokens (borders,
+ * fills, dividers) are actually translucent BLACK — that's what shows up on a
+ * white background. The two exceptions (`whiteBright`, `whiteBody`) are kept
+ * genuinely white because they sit on photos / dark glass accents.
  */
 export const overlay = {
-  // Neutral white, low → high opacity. The generic go-to for borders,
-  // fills, and dividers sitting on top of a dark surface.
-  whiteFaint: withAlpha(WHITE, 0.03),
-  whiteSubtle: withAlpha(WHITE, 0.06),
-  whiteSoft: withAlpha(WHITE, 0.08),
-  whiteMedium: withAlpha(WHITE, 0.12),
-  whiteStrong: withAlpha(WHITE, 0.2),
-  whiteBorder: withAlpha(WHITE, 0.4),
-  whiteBright: withAlpha(WHITE, 0.85),
-  /** Off-white body text sitting on a photo — e.g. onboarding captions. */
-  whiteBody: withAlpha(WHITE, 0.8),
+  // Neutral surface borders / fills / dividers on the light background.
+  whiteFaint: withAlpha(BLACK, 0.03),
+  whiteSubtle: withAlpha(BLACK, 0.05),
+  whiteSoft: withAlpha(BLACK, 0.08),
+  whiteMedium: withAlpha(BLACK, 0.12),
+  whiteStrong: withAlpha(BLACK, 0.2),
+  whiteBorder: withAlpha(BLACK, 0.28),
+  /** Genuinely white — highlights/glows on photos and dark glass accents. */
+  whiteBright: withAlpha(WHITE, 0.9),
+  /** Off-white body text sitting on a photo / dark glass — onboarding captions. */
+  whiteBody: withAlpha(WHITE, 0.85),
 
   // Neutral black — scrims and drop shadows.
-  blackFaint: withAlpha(BLACK, 0.35),
-  blackMedium: withAlpha(BLACK, 0.55),
-  blackStrong: withAlpha(BLACK, 0.75),
+  blackFaint: withAlpha(BLACK, 0.25),
+  blackMedium: withAlpha(BLACK, 0.45),
+  blackStrong: withAlpha(BLACK, 0.65),
 
-  // Silver-tinted glass — the translucent field fill on login/register.
-  glassTop: withAlpha(silver[200], 0.06),
-  glassBottom: withAlpha(silver[200], 0.015),
-  glassFocusTop: withAlpha(silver[200], 0.12),
-  glassFocusBottom: withAlpha(silver[200], 0.03),
+  // Field glass — subtle gray fills on the light surface.
+  glassTop: withAlpha(BLACK, 0.04),
+  glassBottom: withAlpha(BLACK, 0.015),
+  glassFocusTop: withAlpha(BLACK, 0.07),
+  glassFocusBottom: withAlpha(BLACK, 0.03),
 
-  silverBorder: withAlpha(silver[200], 0.08),
-  silverBorderFocus: withAlpha(silver[200], 0.42),
-  silverSheen: withAlpha(silver[200], 0.14),
-  silverPlaceholder: withAlpha(silver[200], 0.38),
+  silverBorder: withAlpha(BLACK, 0.1),
+  silverBorderFocus: withAlpha(BLACK, 0.35),
+  silverSheen: withAlpha(WHITE, 0.6),
+  silverPlaceholder: withAlpha(BLACK, 0.38),
 
-  /** Dark inset "well" — icon avatars recessed into a glass field. */
-  wellInset: withAlpha(silver[950], 0.5),
+  /** Recessed "well" — icon avatars inset into a field. */
+  wellInset: withAlpha(BLACK, 0.05),
 
-  dangerBorder: withAlpha(DANGER, 0.75),
+  dangerBorder: withAlpha(DANGER, 0.6),
   dangerOutline: withAlpha(DANGER, 0.4),
-  dangerTint: withAlpha(DANGER, 0.15),
+  dangerTint: withAlpha(DANGER, 0.1),
 
   successOutline: withAlpha(SUCCESS, 0.4),
-  successTint: withAlpha(SUCCESS, 0.15),
+  successTint: withAlpha(SUCCESS, 0.12),
 
-  primaryOutline: withAlpha(PRIMARY, 0.6),
-  primaryTint: withAlpha(PRIMARY, 0.2),
+  primaryOutline: withAlpha(PRIMARY, 0.5),
+  primaryTint: withAlpha(PRIMARY, 0.1),
 } as const;
 
-/** Silver-tinted overlays reused across surfaces for a consistent finish. */
+/** Overlays reused across surfaces for a consistent finish. */
 export const finish = {
   sheen: overlay.silverSheen,
   border: overlay.silverBorder,
   borderFocus: overlay.silverBorderFocus,
-  halo: '#A8B0C0', // cool silver-blue — used for iOS shadow tints
+  halo: '#C7CCD6',
 } as const;
 
 export const colors = {
-  bg: silver[950],
-  surface: silver[800],
-  surfaceElevated: silver[700],
-  /** Near-black cards/sheets/wells that sit deliberately darker than `surface` — modal sheets, canvas placeholders. */
-  surfaceSunken: silver[950],
-  /** Glass pill buttons (social sign-in, back button). */
-  chip: silver[800],
-  chipPressed: silver[900],
+  bg: WHITE,
+  surface: '#F4F5F7',
+  surfaceElevated: WHITE,
+  /** Slightly sunken cards/sheets/wells that sit below `surface`. */
+  surfaceSunken: silver[100],
+  /** Subtle pill buttons (social sign-in, back button). */
+  chip: silver[100],
+  chipPressed: silver[200],
   border: finish.border,
 
   white: WHITE,
   black: BLACK,
 
-  text: '#F5F5F7',
-  textMuted: '#9A9AA8',
-  textDim: '#6B6B78',
-  /** Dark text sitting on a white/silver surface — CTA button labels. */
+  text: '#0E0E12',
+  textMuted: '#5C5C68',
+  textDim: '#9A9AA8',
+  /** Dark text sitting on a light/white surface (e.g. the phone-mockup screen). */
   textOnLight: '#0A0A0F',
 
   primary: PRIMARY,
   primaryPressed: '#6849E8',
   primaryText: '#FFFFFF',
 
-  accent: '#00E0B8',
+  accent: '#00B39A',
   danger: DANGER,
-  dangerPressed: '#E14A4F',
-  warning: '#FFB13B',
+  dangerPressed: '#C93B40',
+  warning: '#E0921B',
   success: SUCCESS,
 
   overlay: overlay.blackMedium,
