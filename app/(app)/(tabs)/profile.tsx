@@ -48,17 +48,34 @@ export default function ProfileScreen() {
     <ScreenContainer edges={['top']}>
       <Text style={styles.title}>Profile</Text>
 
-      <View style={styles.identity}>
+      {/* Identity card */}
+      <View style={styles.identityCard}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{initial}</Text>
         </View>
-        <Text style={styles.name}>{user?.displayName ?? 'Stylo member'}</Text>
-        {user?.email ? <Text style={styles.email}>{user.email}</Text> : null}
+        <View style={styles.identityText}>
+          <Text style={styles.name} numberOfLines={1}>
+            {user?.displayName ?? 'Stylo member'}
+          </Text>
+          <Text style={styles.email} numberOfLines={1}>
+            {user?.email ?? 'Tap to complete your profile'}
+          </Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
       </View>
 
-      <View style={styles.rows}>
-        {ROWS.map((row) => (
-          <Pressable key={row.label} style={styles.row}>
+      {/* Settings */}
+      <Text style={styles.sectionLabel}>SETTINGS</Text>
+      <View style={styles.rowsCard}>
+        {ROWS.map((row, index) => (
+          <Pressable
+            key={row.label}
+            style={({ pressed }) => [
+              styles.row,
+              index < ROWS.length - 1 && styles.rowDivider,
+              pressed && styles.rowPressed,
+            ]}
+          >
             <View style={styles.rowIcon}>
               <Ionicons name={row.icon} size={18} color={colors.text} />
             </View>
@@ -93,42 +110,66 @@ export default function ProfileScreen() {
   );
 }
 
-const AVATAR = 84;
+const AVATAR = 60;
 
 const styles = StyleSheet.create({
   title: { ...typography.displaySm, color: colors.text, paddingTop: spacing.md },
-  identity: { alignItems: 'center', gap: spacing.xs, paddingVertical: spacing.xl },
+  identityCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    marginTop: spacing.lg,
+    padding: spacing.md,
+    borderRadius: radius.xl,
+    backgroundColor: colors.surfaceElevated,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   avatar: {
     width: AVATAR,
     height: AVATAR,
     borderRadius: AVATAR / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.surfaceElevated,
-    borderWidth: 1,
-    borderColor: overlay.whiteSoft,
-    marginBottom: spacing.xs,
+    backgroundColor: colors.black,
   },
   avatarText: {
-    ...typography.displayLg,
-    fontSize: 34,
+    fontSize: 26,
     fontWeight: '800',
-    color: colors.text,
+    color: colors.white,
   },
-  name: { ...typography.titleLg, color: colors.text },
-  email: { ...typography.body, color: colors.textMuted },
-  rows: { gap: spacing.xs },
+  identityText: { flex: 1, gap: 2 },
+  name: { ...typography.titleSm, color: colors.text, fontWeight: '800' },
+  email: { ...typography.caption, color: colors.textMuted },
+  sectionLabel: {
+    ...typography.caption,
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    color: colors.textDim,
+    marginTop: spacing.xl,
+    marginBottom: spacing.sm,
+    marginLeft: spacing.xs,
+  },
+  rowsCard: {
+    borderRadius: radius.xl,
+    backgroundColor: colors.surfaceElevated,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: 'hidden',
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    paddingVertical: spacing.sm,
+    paddingVertical: spacing.sm + 2,
     paddingHorizontal: spacing.md,
-    borderRadius: radius.lg,
-    backgroundColor: overlay.whiteFaint,
-    borderWidth: 1,
-    borderColor: overlay.whiteSoft,
   },
+  rowDivider: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
+  },
+  rowPressed: { backgroundColor: overlay.whiteFaint },
   rowIcon: {
     width: 34,
     height: 34,

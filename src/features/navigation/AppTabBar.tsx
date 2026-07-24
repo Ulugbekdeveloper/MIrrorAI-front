@@ -1,6 +1,5 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -10,9 +9,9 @@ import { useTryOnDraftStore } from '@/features/tryOn/state';
 import { colors, overlay, radius, silver, spacing, typography } from '@/theme';
 
 /**
- * The app's bottom navigation: a full-width frosted-glass bar with Wardrobe
- * (left), a raised "Try On" action button (center), and Profile (right). The
- * center button isn't a tab — it launches the full-screen try-on flow.
+ * The app's bottom navigation: a crisp white bar with Wardrobe (left), a raised
+ * black "Try On" action button (center), and Profile (right). The center button
+ * isn't a tab — it launches the full-screen try-on flow.
  */
 export function AppTabBar({ state, navigation }: BottomTabBarProps) {
   const router = useRouter();
@@ -37,36 +36,27 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
 
   return (
     <View style={styles.wrap}>
-      <BlurView intensity={40} tint="systemThickMaterialLight" style={styles.bar}>
+      <View style={styles.bar}>
         <View style={[styles.barInner, { paddingBottom: (insets.bottom || spacing.sm) + spacing.xs }]}>
           <TabButton
-            family="mci"
-            icon="hanger"
+            icon="shirt"
             label="Wardrobe"
             focused={state.index === 0}
             onPress={() => goToTab(0)}
           />
           <View style={styles.centerGap} />
           <TabButton
-            family="ion"
             icon="person"
             label="Profile"
             focused={state.index === 1}
             onPress={() => goToTab(1)}
           />
         </View>
-      </BlurView>
+      </View>
 
-      {/* Half-round bump — the bar rises in a semicircle to cradle the button.
-          Rendered over the bar's center (same glass) so it blends seamlessly. */}
+      {/* Half-round bump — the bar rises in a semicircle to cradle the button. */}
       <View style={styles.bumpWrap} pointerEvents="none">
-        <View style={styles.bump}>
-          <BlurView
-            intensity={40}
-            tint="systemThickMaterialLight"
-            style={StyleSheet.absoluteFill}
-          />
-        </View>
+        <View style={styles.bump} />
       </View>
 
       {/* Raised center action — launches the try-on flow. */}
@@ -78,7 +68,7 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
             end={{ x: 0, y: 1 }}
             style={styles.centerButton}
           >
-            <Ionicons name="sparkles" size={26} color={colors.white} />
+            <Ionicons name="sparkles" size={25} color={colors.white} />
           </LinearGradient>
           <Text style={styles.centerLabel}>Try On</Text>
         </Pressable>
@@ -88,48 +78,47 @@ export function AppTabBar({ state, navigation }: BottomTabBarProps) {
 }
 
 type TabButtonProps = {
-  family: 'mci' | 'ion';
-  icon: string;
+  icon: 'shirt' | 'person';
   label: string;
   focused: boolean;
   onPress: () => void;
 };
 
-function TabButton({ family, icon, label, focused, onPress }: TabButtonProps) {
-  const color = focused ? colors.text : colors.textDim;
+function TabButton({ icon, label, focused, onPress }: TabButtonProps) {
   return (
     <Pressable onPress={onPress} style={styles.tab} hitSlop={8}>
-      {family === 'mci' ? (
-        <MaterialCommunityIcons
-          name={icon as keyof typeof MaterialCommunityIcons.glyphMap}
-          size={24}
-          color={color}
-        />
-      ) : (
-        <Ionicons name={icon as keyof typeof Ionicons.glyphMap} size={24} color={color} />
-      )}
-      <Text style={[styles.tabLabel, { color }]}>{label}</Text>
+      <Ionicons
+        name={focused ? icon : `${icon}-outline`}
+        size={23}
+        color={focused ? colors.text : colors.textDim}
+      />
+      <Text
+        style={[
+          styles.tabLabel,
+          { color: focused ? colors.text : colors.textDim, fontWeight: focused ? '800' : '600' },
+        ]}
+      >
+        {label}
+      </Text>
+      <View style={[styles.dot, focused && styles.dotActive]} />
     </Pressable>
   );
 }
 
-const CENTER = 62;
-const BUMP_W = 94;
-const BUMP_H = BUMP_W / 2; // semicircle
-const BUMP_OVERLAP = 12; // extends into the bar so the flat base is hidden
+const CENTER = 60;
+const BUMP_W = 92;
+const BUMP_H = BUMP_W / 2;
+const BUMP_OVERLAP = 12;
 
 const styles = StyleSheet.create({
-  // Full-bleed: the bar spans the entire width and sits flush at the bottom.
   wrap: { alignSelf: 'stretch' },
   bar: {
     borderTopLeftRadius: radius.xl,
     borderTopRightRadius: radius.xl,
-    borderTopWidth: 1,
-    borderColor: overlay.whiteSoft,
-    overflow: 'hidden',
-    // Faint lift so the frosted glass reads as a bar even where the native
-    // blur is weak (e.g. some Android devices).
-    backgroundColor: overlay.whiteFaint,
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    borderColor: overlay.whiteMedium,
+    backgroundColor: colors.surfaceElevated,
   },
   barInner: {
     flexDirection: 'row',
@@ -146,10 +135,16 @@ const styles = StyleSheet.create({
   tabLabel: {
     ...typography.caption,
     fontSize: 11,
-    fontWeight: '700',
   },
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    marginTop: 1,
+    backgroundColor: 'transparent',
+  },
+  dotActive: { backgroundColor: colors.text },
   centerGap: { width: CENTER + spacing.md },
-  // The half-round bump, centered on and rising above the bar's top edge.
   bumpWrap: {
     position: 'absolute',
     left: 0,
@@ -165,11 +160,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderLeftWidth: 1,
     borderRightWidth: 1,
-    borderColor: overlay.whiteSoft,
-    backgroundColor: overlay.whiteFaint,
-    overflow: 'hidden',
+    borderColor: overlay.whiteMedium,
+    backgroundColor: colors.surfaceElevated,
   },
-  // Overlays the bar's center gap; the button sits raised above the bar's top edge.
   centerSlot: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
@@ -183,7 +176,7 @@ const styles = StyleSheet.create({
     borderRadius: CENTER / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 3,
+    borderWidth: 4,
     borderColor: colors.bg,
   },
   centerLabel: {
@@ -192,6 +185,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.text,
     textAlign: 'center',
-    marginTop: 2,
+    marginTop: 3,
   },
 });

@@ -2,7 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 
-import { colors, overlay, radius, silver, spacing, typography } from '@/theme';
+import { colors, radius, silver, spacing, typography } from '@/theme';
 
 type Variant = 'cta' | 'primary' | 'secondary' | 'ghost' | 'danger' | 'light';
 type Size = 'md' | 'lg';
@@ -58,8 +58,6 @@ function MetalCTA({
         end={{ x: 0, y: 1 }}
         style={ctaStyles.gradient}
       >
-        {/* Fine top sheen — polished metal edge */}
-        <View pointerEvents="none" style={ctaStyles.topSheen} />
         {loading ? (
           <ActivityIndicator color={colors.white} />
         ) : (
@@ -127,15 +125,6 @@ const ctaStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-  },
-  topSheen: {
-    position: 'absolute',
-    top: 0,
-    left: '12%',
-    right: '12%',
-    height: 1,
-    backgroundColor: overlay.whiteBright,
-    borderRadius: 1,
   },
   label: {
     color: colors.white,
