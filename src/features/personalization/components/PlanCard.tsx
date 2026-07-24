@@ -51,8 +51,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   cardSelected: {
-    borderColor: colors.primary,
-    backgroundColor: overlay.primaryTint,
+    borderColor: colors.black,
+    borderWidth: 2,
+    backgroundColor: overlay.whiteSoft,
   },
   badge: {
     alignSelf: 'flex-start',
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   radioSelected: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary,
+    borderColor: colors.black,
+    backgroundColor: colors.black,
   },
 });

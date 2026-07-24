@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     backgroundColor: overlay.whiteFaint,
   },
   rowSelected: {
-    borderColor: overlay.whiteBorder,
+    borderColor: colors.black,
     backgroundColor: overlay.whiteSoft,
   },
   iconWrap: {

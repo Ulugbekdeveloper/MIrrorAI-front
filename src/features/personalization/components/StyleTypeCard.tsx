@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors, overlay, radius, spacing, typography } from '@/theme';
 
@@ -67,12 +67,9 @@ export function StyleTypeCard({ option, selected, onPress }: Props) {
         </Text>
 
         {selected ? (
-          <Ionicons
-            name="checkmark-circle"
-            size={22}
-            color={colors.success}
-            style={styles.badge}
-          />
+          <View style={styles.badge}>
+            <Ionicons name="checkmark" size={15} color={colors.white} />
+          </View>
         ) : null}
       </Animated.View>
 
@@ -102,11 +99,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: spacing.xs,
     right: spacing.xs,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.black,
   },
   selectionRing: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: radius.lg,
-    borderWidth: 2,
-    borderColor: colors.success,
+    borderWidth: 3,
+    borderColor: colors.black,
   },
 });
